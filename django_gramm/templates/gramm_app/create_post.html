@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+{% block content %}
+    {% load static %}
+<link rel="stylesheet" type="text/css" href="{% static 'forms/live_icons.css' %}">
+    <script src="{% static 'forms/file_field.js' %}"></script>
+    {% load bulma_filters %}
+    <div class="columns is-centered">
+        <form class="box column is-half" method="POST" enctype="multipart/form-data">
+            <h3 class="title">Create post 2</h3>
+            {% csrf_token %}
+            {% form_bulma %}
+            {{ form.media }}
+            <div class="field">
+                <p class="control">
+                    {% button_bulma name='create' %}
+                </p>
+            </div>
+        </form>
+    </div>
+{% endblock %}
