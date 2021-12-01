@@ -18,6 +18,16 @@ from .forms import SignupForm, UserActivationForm, UserUpdateForm
 
 # Create your views here.
 
+from gramm_app.models import Post
+from django.contrib.auth.models import Permission
+from django.contrib.contenttypes.models import ContentType
+
+# content_type = ContentType.objects.get_for_model(Post)
+# permission = Permission.objects.create(
+#     codename='edit_own_post',
+#     name='Edit Own Posts',
+#     content_type=content_type,
+# )
 
 class Signup(View):
     form_class = SignupForm
@@ -83,6 +93,9 @@ class Activate(View):
                                instance=request.user)
         if form.is_valid():
             user = form.save()
+            # TODO 'set permissions for new user'
+            # permissions = user.get_user_permissions()
+            # permissions.append('gramm_app.edit_own_post')
             user.save()
             update_session_auth_hash(request, user)  # Important, to update the session with the new password
             messages.success(request, f'You are successful login as {user.get_full_name()}.')

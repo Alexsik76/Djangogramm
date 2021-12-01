@@ -49,14 +49,6 @@ class DjGrammUser(AbstractUser):
     avatar = models.ImageField(upload_to='auth_by_email/users_avatars')
     objects = DjGrammUserManager()
 
-    class Meta:
-        permissions = [('gramm_app.create_post', 'Can create post'),
-                       ('gramm_app.edit_post', 'Can change post'),
-                       ('gramm_app.view_post', 'Can view post'),
-                       ('gramm_app.delete_post', 'Can delete post'),
-                       ('gramm_app.view_posts', 'Can view all posts')
-                       ]
-
     REQUIRED_FIELDS = ['bio', 'avatar']
     USERNAME_FIELD = 'email'
 
@@ -69,7 +61,7 @@ class DjGrammUser(AbstractUser):
             if file_name.exists():
                 self.avatar.file.close()
                 file_name.unlink()
-        except (AttributeError, ValueError) as e:
+        except (AttributeError, ValueError, FileNotFoundError) as e:
             logger.info(e)
 
     def delete(self, using=None, keep_parents=False):
