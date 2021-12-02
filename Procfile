@@ -1,1 +1,1 @@
-web: gunicorn django_gramm.django_gramm.wsgi
+web: python manage.py runserver 0.0.0.0:$PORT
