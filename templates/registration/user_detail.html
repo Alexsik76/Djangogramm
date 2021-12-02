@@ -1,0 +1,75 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load bulma_filters %}
+{% block content %}
+    <div class="columns is-centered">
+        <div class="card column is-half">
+            <header class="card-header">
+                <h3 class="card-header-title is-size-2 has-text-grey-light">User detail</h3>
+                <a class="button" href="{% url 'index' %}"><i class="fas fa-times"></i></a>
+            </header>
+            <div class="card-content">
+                <div class="content">
+                    <div class="columns">
+                        <div class="column is-two-fifths">
+                            <figure class="image" style="width: 128px">
+                                {% if dj_user.avatar %}
+                                    <img id="imgPrev" src="{{ dj_user.avatar.url }}" alt="Loaded image"/>
+                                {% else %}
+                                    <img id="imgPrev" src="{% static 'avatar_placeholder.png' %}" alt="Loaded image"/>
+                                {% endif %}
+                            </figure>
+                        </div>
+                        <div class="column">
+                            <table class="table">
+                                <tbody>
+                                <tr>
+                                    <th>First name</th>
+                                    <td>{{ dj_user.first_name }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Last name</th>
+                                    <td>{{ dj_user.last_name }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Email</th>
+                                    <td>{{ dj_user.email }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Bio</th>
+                                    <td>{{ dj_user.bio }}</td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <footer class="card-footer">
+                <a class="button is-success" href="{% url 'user_update' %}">Edit profile</a>
+            </footer>
+            <h4 class="title">Posts:</h4>
+            <div class="box">
+                <div class="column">
+                    <table class="table">
+                        <tbody>
+                        {% for post in dj_user.post_set.all %}
+                            <tr>
+                                <th>Title</th>
+                                <td>{{ post.title }}</td>
+                                <th>File</th>
+                                <td>{{ post.image|get_file_name }}</td>
+                                <td><a href="{% url 'post-detail' pk=post.id %} ">{{ post.image|get_file_name }}</a></td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            <h4 class="title">Permissions:</h4>
+            <div class="box">
+               {{ perms.gramm_app }}
+            </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

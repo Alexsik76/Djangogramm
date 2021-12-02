@@ -1,0 +1,20 @@
+<div class="field">
+{% load bulma_filters %}
+    <label for="{{ field.id_for_label }}" class="label">{{ field.label }}</label>
+    <div class="control has-icons-left has-icons-right">
+        {{ field.as_widget }}
+        {{ left_icon }}
+        {{ right_icon }}
+    </div>
+    {% if field.errors %}
+        <ul>
+            {% for error in field.errors %}
+                <li class="help is-danger">{{ error }}</li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <div class="block help">
+            {{ field.help_text }}
+        </div>
+    {% endif %}
+</div>

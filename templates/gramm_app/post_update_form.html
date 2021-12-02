@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+{% block content %}
+    {% include 'block_messages.html' %}
+    <div class="columns is-centered">
+        <form class="card column is-half" method="POST" enctype="multipart/form-data">
+            <header class="card-header">
+                <h3 class="card-header-title is-size-2 has-text-grey-light">Post update</h3>
+                <a class="button" href="{% url 'index' %}"><i class="fas fa-times"></i></a>
+            </header>
+            <div class="card-content">
+                <div class="content">
+                    {% load bulma_filters %}
+                    {% csrf_token %}
+                    {% form_bulma %}
+                    {{ form.media }}
+                    {% button_bulma name='update' %}
+                </div>
+            </div>
+        </form>
+    </div>
+{% endblock %}

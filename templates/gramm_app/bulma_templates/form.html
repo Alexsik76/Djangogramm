@@ -1,0 +1,14 @@
+{% load static %}
+<link rel="stylesheet" type="text/css" href="{% static 'forms/live_icons.css' %}">
+{% load bulma_filters %}
+{% if form.non_field_errors %}
+        <ul>
+            {% for error in form.non_field_errors %}
+                <li class="help is-danger">{{ error }}</li>
+            {% endfor %}
+        </ul>
+{% endif %}
+{% for field in form %}
+    {% bulma_field %}
+{% endfor %}
+{{ form.media }}
