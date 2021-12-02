@@ -60,7 +60,7 @@ class PostDeleteView(PermissionRequiredMixin, DeleteView):
 
 
 class PostListView(PermissionRequiredMixin, ListView):
-    permission_required = 'auth_by_email.gramm_app.view_posts'
+    permission_required = 'gramm_app.view_post'
     model = Post
 
     def has_permission(self):
