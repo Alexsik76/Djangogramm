@@ -155,5 +155,5 @@ EMAIL_PORT = 465
 EMAIL_USE_SSL = True
 DEFAULT_FROM_EMAIL = 'my_python@i.ua'
 
-from auth_by_email.auth_settings import *
+from django_gramm.auth_by_email.auth_settings import *
 django_heroku.settings(locals())
