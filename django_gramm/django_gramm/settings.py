@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 """
 
 from pathlib import Path
+import django_heroku
 import django
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -155,3 +156,4 @@ EMAIL_USE_SSL = True
 DEFAULT_FROM_EMAIL = 'my_python@i.ua'
 
 from auth_by_email.auth_settings import *
+django_heroku.settings(locals())
