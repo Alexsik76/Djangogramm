@@ -1,8 +1,0 @@
-{% extends 'base.html' %}
-{% block content %}
-    <div class="buttons">
-    <a class="button" href="{% url 'post-create' %}">Create post</a>
-    <a class="button" href="{% url 'post-list' %}">All posts</a>
-    </div>
-    {% include 'block_messages.html' %}
-{% endblock %}
