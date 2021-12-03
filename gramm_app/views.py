@@ -67,4 +67,15 @@ class PostListView(PermissionRequiredMixin, ListView):
         perms = self.get_permission_required()
         return self.request.user.has_perms(perms)
 
+# TODO check permissions
+from django.contrib.auth.models import Permission
 
+
+def grant_user_permissions(user):
+    all_perms_codename = ['gramm_app.view_post',
+                          'gramm_app.delete_post',
+                          'gramm_app.edit_own_post',
+                          'gramm_app.view_post',
+                          'gramm_app.add_post']
+    permissions = [Permission.objects.get(codename=codename) for codename in all_perms_codename]
+    user.user_permissions.add(permissions)
