@@ -79,6 +79,7 @@ class Activate(View):
         if user is not None and default_token_generator.check_token(user, kwargs['token']):
             # activate user and login:
             user.is_active = True
+            user.grant_user_permissions()
             user.save()
             login(request, user)
             form = self.form_class(instance=request.user)

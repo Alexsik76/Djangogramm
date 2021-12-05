@@ -4,7 +4,6 @@ from django.views.generic import CreateView, UpdateView, DetailView, DeleteView,
 from django.contrib.auth.mixins import PermissionRequiredMixin
 from gramm_app.models import Post
 from gramm_app.forms import PostCreateForm, PostUpdateForm
-
 # Create your views here.
 
 
@@ -15,7 +14,7 @@ def index(request):
 class PostCreateView(PermissionRequiredMixin, CreateView):
     model = Post
     form_class = PostCreateForm
-    permission_required = 'gramm_app.add_post'
+    permission_required = 'auth_by_email.gramm_app.create_post'
 
     def form_valid(self, form):
         form.instance.author = self.request.user
@@ -32,7 +31,7 @@ class PostCreateView(PermissionRequiredMixin, CreateView):
 class PostDetailView(PermissionRequiredMixin, DetailView):
     model = Post
     fields = ['title', 'image']
-    permission_required = 'gramm_app.view_post'
+    permission_required = 'auth_by_email.gramm_app.view_post'
     permission_denied_message = "You can't view this post"
 
 
@@ -40,7 +39,7 @@ class PostUpdateView(PermissionRequiredMixin, UpdateView):
     template_name_suffix = '_update_form'
     model = Post
     form_class = PostUpdateForm
-    permission_required = 'gramm_app.edit_own_post'
+    permission_required = 'auth_by_email.gramm_app.edit_post'
 
     def has_permission(self):
         perms = self.get_permission_required()
@@ -53,29 +52,16 @@ class PostUpdateView(PermissionRequiredMixin, UpdateView):
 
 class PostDeleteView(PermissionRequiredMixin, DeleteView):
     model = Post
-    permission_required = 'gramm_app.delete_post'
+    permission_required = 'auth_by_email.gramm_app.delete_post'
 
     def get_success_url(self):
         return reverse('index')
 
 
 class PostListView(PermissionRequiredMixin, ListView):
-    permission_required = 'gramm_app.view_post'
+    permission_required = 'auth_by_email.gramm_app.view_post'
     model = Post
 
     def has_permission(self):
         perms = self.get_permission_required()
         return self.request.user.has_perms(perms)
-
-# TODO check permissions
-from django.contrib.auth.models import Permission
-
-
-def grant_user_permissions(user):
-    all_perms_codename = ['gramm_app.view_post',
-                          'gramm_app.delete_post',
-                          'gramm_app.edit_own_post',
-                          'gramm_app.view_post',
-                          'gramm_app.add_post']
-    permissions = [Permission.objects.get(codename=codename) for codename in all_perms_codename]
-    user.user_permissions.add(permissions)

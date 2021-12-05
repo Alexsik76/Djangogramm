@@ -1,6 +1,7 @@
 from django.conf import settings
 from django.db import models
 from django.contrib.auth.models import AbstractUser, BaseUserManager
+from django.contrib.auth.models import Permission
 from django.utils.translation import gettext_lazy as _
 import logging
 # Create your models here.
@@ -67,3 +68,11 @@ class DjGrammUser(AbstractUser):
     def delete(self, using=None, keep_parents=False):
         self.delete_media()
         return super().delete()
+
+    def grant_user_permissions(self):
+        all_perms_codename = ['gramm_app.view_post',
+                              'gramm_app.delete_post',
+                              'gramm_app.edit_post',
+                              'gramm_app.create_post']
+        for perms_codename in all_perms_codename:
+            self.user_permissions.add(Permission.objects.get(codename=perms_codename).id)
