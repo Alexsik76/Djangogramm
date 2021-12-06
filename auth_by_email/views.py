@@ -14,10 +14,9 @@ from django.views import View
 from django.views.generic import UpdateView, DetailView
 
 from .forms import SignupForm, UserActivationForm, UserUpdateForm
-
+from .models import Follower, Following
 
 # Create your views here.
-
 
 
 class Signup(View):
@@ -54,7 +53,6 @@ class Signup(View):
 
 
 DjGrammUser = get_user_model()
-
 
 class Activate(View):
     form_class = UserActivationForm
@@ -98,8 +96,8 @@ class DjUserDetailView(LoginRequiredMixin, DetailView):
     context_object_name = 'dj_user'
     template_name = 'registration/user_detail.html'
 
-    def get_object(self, *args, **kwargs):
-        return self.request.user
+    # def get_object(self, *args, **kwargs):
+    #     return self.request.user
 
 
 class DjUserUpdateView(LoginRequiredMixin, UpdateView):
@@ -123,3 +121,13 @@ class DjUserUpdateView(LoginRequiredMixin, UpdateView):
             return self.form_valid(form)
         else:
             return self.form_invalid(form)
+
+
+class FollowView(LoginRequiredMixin, View):
+    def get(self, request, pk, *args, **kwargs):
+        user = DjGrammUser.objects.get(pk=pk)
+        following = Follower(user.id)
+        following.save()
+        follower = Following(request.user.id)
+        follower.save()
+        return redirect(request.META['HTTP_REFERER'])

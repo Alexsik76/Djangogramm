@@ -19,7 +19,7 @@
                                 </tr>
                                 <tr>
                                     <th>Author</th>
-                                    <td>{{ post.author.get_full_name }}</td>
+                                    <td><a href="{% url 'user_detail' post.author.id %}">{{ post.author.get_full_name }}</a> </td>
                                 </tr>
                                 </tbody>
                             </table>
@@ -36,11 +36,8 @@
                             </div>
                         </div>
                     </div>
-
-
 {% empty %}
     <li>No posts yet.</li>
 {% endfor %}
 </div>
-
 {% endblock %}

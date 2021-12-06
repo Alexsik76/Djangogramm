@@ -46,7 +46,7 @@
                 </div>
             </div>
             <footer class="card-footer">
-                <a class="button is-success" href="{% url 'user_update' %}">Edit profile</a>
+                <a class="button is-success" href="{% url 'user_update' %}">Edit profile</a> <a class="button is-primary is-light" href="{% url 'following' dj_user.id %}">Follow {{ dj_user.following.count }}</a>
             </footer>
             <h4 class="title">Posts:</h4>
             <div class="box">

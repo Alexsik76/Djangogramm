@@ -55,7 +55,7 @@
             {% if user.is_authenticated %}
                 <div class="navbar-item">
                     <div class="buttons">
-                        <a class="button is-primary" href="{% url 'user_detail' %}">
+                        <a class="button is-primary" href="{% url 'user_detail' user.id %}">
                             {{ user.email }}
                         </a>
                         <a class="button is-warning" href="{% url 'logout' %}">

@@ -41,3 +41,14 @@ class Post(models.Model):
     def delete(self, using=None, keep_parents=False):
         self.delete_media()
         return super().delete()
+
+
+class Like(models.Model):
+    liker = models.ForeignKey(DjGrammUser,
+                              on_delete=models.CASCADE,
+                              null=True,
+                              related_name='liker')
+    liked = models.ForeignKey(Post,
+                              on_delete=models.CASCADE,
+                              null=True,
+                              related_name='liked')

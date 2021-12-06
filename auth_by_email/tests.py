@@ -1,10 +1,7 @@
-from django.test import TestCase
+from django.test import TestCase, Client
 from django.urls import reverse
 from auth_by_email.models import DjGrammUser
 from gramm_app.models import Post
-from django.test import Client
-# from django.contrib.auth import login
-# from django.contrib.auth.models import Permission
 
 
 # Create your tests here.
@@ -22,9 +19,7 @@ class DjUserModelTest(TestCase):
                                                 avatar='picture.png',
                                                 first_name='John',
                                                 last_name='Snow',
-                                                password='password12'
-                                                )
-        # user.is_active = True
+                                                password='password12')
         user.grant_user_permissions()
 
     def test_user_ful_name(self):

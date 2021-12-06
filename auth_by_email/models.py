@@ -76,3 +76,19 @@ class DjGrammUser(AbstractUser):
                               'add_post']
         required_perms = [Permission.objects.get(codename=perms_codename) for perms_codename in all_perms_codename]
         self.user_permissions.set(required_perms)
+
+
+class Following(models.Model):
+    user_id = models.ForeignKey(DjGrammUser,
+                                on_delete=models.CASCADE,
+                                null=True,
+                                related_name="followers")
+
+
+class Follower(models.Model):
+    user_id = models.ForeignKey(DjGrammUser,
+                                on_delete=models.CASCADE,
+                                null=True,
+                                related_name="following")
+
+
