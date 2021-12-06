@@ -9,6 +9,7 @@ pillow = "*"
 gunicorn = "*"
 django-heroku = "*"
 psycopg2-binary = "*"
+coverage = "*"
 
 [dev-packages]
 pytest = "*"
