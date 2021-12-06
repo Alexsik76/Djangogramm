@@ -48,6 +48,8 @@
             <footer class="card-footer">
                 <a class="button is-success" href="{% url 'user_update' %}">Edit profile</a> <a class="button is-primary is-light" href="{% url 'following' dj_user.id %}">Follow {{ dj_user.following.count }}</a>
             </footer>
+        <p> Following: {{ dj_user.following.all }}</p>
+        <p> Followers: {{ dj_user.followers.all }}</p>
             <h4 class="title">Posts:</h4>
             <div class="box">
                 {% for post in dj_user.post_set.all %}

@@ -126,8 +126,8 @@ class DjUserUpdateView(LoginRequiredMixin, UpdateView):
 class FollowView(LoginRequiredMixin, View):
     def get(self, request, pk, *args, **kwargs):
         user = DjGrammUser.objects.get(pk=pk)
-        following = Follower(user.id)
+        following = Follower(user=user)
         following.save()
-        follower = Following(request.user.id)
+        follower = Following(user=request.user)
         follower.save()
         return redirect(request.META['HTTP_REFERER'])

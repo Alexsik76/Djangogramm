@@ -79,16 +79,14 @@ class DjGrammUser(AbstractUser):
 
 
 class Following(models.Model):
-    user_id = models.ForeignKey(DjGrammUser,
-                                on_delete=models.CASCADE,
-                                null=True,
-                                related_name="followers")
+    user = models.ForeignKey(DjGrammUser,
+                             on_delete=models.CASCADE,
+                             null=True,
+                             related_name="followers")
 
 
 class Follower(models.Model):
-    user_id = models.ForeignKey(DjGrammUser,
-                                on_delete=models.CASCADE,
-                                null=True,
-                                related_name="following")
-
-
+    user = models.ForeignKey(DjGrammUser,
+                             on_delete=models.CASCADE,
+                             null=True,
+                             related_name="following")
