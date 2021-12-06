@@ -70,9 +70,9 @@ class DjGrammUser(AbstractUser):
         return super().delete()
 
     def grant_user_permissions(self):
-        all_perms_codename = ['gramm_app.view_post',
-                              'gramm_app.delete_post',
-                              'gramm_app.edit_post',
-                              'gramm_app.create_post']
-        for perms_codename in all_perms_codename:
-            self.user_permissions.add(Permission.objects.get(codename=perms_codename).id)
+        all_perms_codename = ['view_post',
+                              'delete_post',
+                              'change_post',
+                              'add_post']
+        required_perms = [Permission.objects.get(codename=perms_codename) for perms_codename in all_perms_codename]
+        self.user_permissions.set(required_perms)

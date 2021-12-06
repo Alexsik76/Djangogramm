@@ -14,7 +14,7 @@ def index(request):
 class PostCreateView(PermissionRequiredMixin, CreateView):
     model = Post
     form_class = PostCreateForm
-    permission_required = 'auth_by_email.gramm_app.create_post'
+    permission_required = 'gramm_app.add_post'
 
     def form_valid(self, form):
         form.instance.author = self.request.user
@@ -31,7 +31,7 @@ class PostCreateView(PermissionRequiredMixin, CreateView):
 class PostDetailView(PermissionRequiredMixin, DetailView):
     model = Post
     fields = ['title', 'image']
-    permission_required = 'auth_by_email.gramm_app.view_post'
+    permission_required = 'gramm_app.view_post'
     permission_denied_message = "You can't view this post"
 
 
@@ -39,7 +39,7 @@ class PostUpdateView(PermissionRequiredMixin, UpdateView):
     template_name_suffix = '_update_form'
     model = Post
     form_class = PostUpdateForm
-    permission_required = 'auth_by_email.gramm_app.edit_post'
+    permission_required = 'gramm_app.change_post'
 
     def has_permission(self):
         perms = self.get_permission_required()
@@ -52,14 +52,14 @@ class PostUpdateView(PermissionRequiredMixin, UpdateView):
 
 class PostDeleteView(PermissionRequiredMixin, DeleteView):
     model = Post
-    permission_required = 'auth_by_email.gramm_app.delete_post'
+    permission_required = 'gramm_app.delete_post'
 
     def get_success_url(self):
         return reverse('index')
 
 
 class PostListView(PermissionRequiredMixin, ListView):
-    permission_required = 'auth_by_email.gramm_app.view_post'
+    permission_required = 'gramm_app.view_post'
     model = Post
 
     def has_permission(self):

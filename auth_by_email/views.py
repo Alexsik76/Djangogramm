@@ -70,7 +70,6 @@ class Activate(View):
         if user is not None and default_token_generator.check_token(user, kwargs['token']):
             # activate user and login:
             user.is_active = True
-            user.grant_user_permissions()
             user.save()
             login(request, user)
             form = self.form_class(instance=request.user)
@@ -85,9 +84,7 @@ class Activate(View):
                                instance=request.user)
         if form.is_valid():
             user = form.save()
-            # TODO 'set permissions for new user'
-            # permissions = user.get_user_permissions()
-            # permissions.append('gramm_app.edit_own_post')
+            user.grant_user_permissions()
             user.save()
             update_session_auth_hash(request, user)  # Important, to update the session with the new password
             messages.success(request, f'You are successful login as {user.get_full_name()}.')
