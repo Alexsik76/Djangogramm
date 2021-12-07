@@ -54,6 +54,7 @@ class Signup(View):
 
 DjGrammUser = get_user_model()
 
+
 class Activate(View):
     form_class = UserActivationForm
     template_name = 'registration/activation.html'
@@ -124,10 +125,14 @@ class DjUserUpdateView(LoginRequiredMixin, UpdateView):
 
 
 class FollowView(LoginRequiredMixin, View):
+
     def get(self, request, pk, *args, **kwargs):
-        user = DjGrammUser.objects.get(pk=pk)
-        following = Follower(user=user)
-        following.save()
-        follower = Following(user=request.user)
-        follower.save()
+        author = DjGrammUser.objects.get(pk=pk)
+        viewer = DjGrammUser.objects.get(pk=request.user.id)
+        if author is not viewer:
+            if viewer not in author.followers.all():
+                # follower = Follower.objects.create(follower=viewer)
+                author.followers.create(follower=viewer)
+                viewer.following.create(following=author)
+                print()
         return redirect(request.META['HTTP_REFERER'])
