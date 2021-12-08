@@ -82,12 +82,13 @@ class Follower(models.Model):
     """
     Followers are the users that follow you.
     """
-
     follower = models.ForeignKey(DjGrammUser,
                                  on_delete=models.CASCADE,
                                  null=True,
                                  related_name="followers")
-    objects = models.Manager
+
+    def __str__(self):
+        return self.follower.email
 
 
 class Following(models.Model):
@@ -99,4 +100,5 @@ class Following(models.Model):
                                   null=True,
                                   related_name="following")
 
-    objects = models.Manager
+    def __str__(self):
+        return self.following.email

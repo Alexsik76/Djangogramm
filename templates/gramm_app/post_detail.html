@@ -1,13 +1,7 @@
 {% extends 'base.html' %}
 {% load static %}
 {% block content %}
-    <h1>{{ object.headline }}</h1>
-<p>{{ object.content }}</p>
-<p>Reporter: {{ object.author }}</p>
-<p>Published: {{ object.pub_date|date }}</p>
-<p>Date: {{ now|date }}</p>
-
-    <div class="columns is-centered">
+     <div class="columns is-centered">
         <div class="card column is-half">
             <header class="card-header">
                 <h3 class="card-header-title is-size-2 has-text-grey-light">Post detail</h3>

@@ -2,6 +2,7 @@
 {% load static %}
 {% load bulma_filters %}
 {% block content %}
+        {% include 'block_messages.html' %}
     <div class="columns is-centered">
         <div class="card column is-half">
             <header class="card-header">
@@ -47,12 +48,33 @@
             </div>
             <footer class="card-footer">
                 <a class="button is-success" href="{% url 'user_update' %}">Edit profile</a>
-                <a class="button is-primary is-light" href="{% url 'following' dj_user.id %}">Follow {{ dj_user.following.count }}</a>
+                <a class="button is-primary is-light" href="{% url 'following' dj_user.id %}">Follow {{ dj_user.followers.count }}</a>
             </footer>
-        <p> Following: {{ dj_user.following.all }}</p>
-        <p> Followers: {{ dj_user.followers.all }}</p>
-            <h4 class="title">Posts:</h4>
+         <div class="box">
+            <h4 class="title">Following:</h4>
+             <div class="columns">
+                 <div class="column is-half">
+                     <h5 class="title">Followers:</h5>
+                     <ul>
+                         {% for folower in  dj_user.followers.all %}
+                             {{ folower }}
+                         {% endfor %}
+                     </ul>
+
+                 </div>
+                 <div class="column">
+                     <h5 class="title">Following:</h5>
+                      <ul>
+                         {% for folowed in  dj_user.following.all %}
+                             {{ folowed }}
+                         {% endfor %}
+                     </ul>
+
+                 </div>
+             </div>
+         </div>
             <div class="box">
+                <h4 class="title">Posts:</h4>
                 {% for post in dj_user.post_set.all %}
                     <div class="columns">
                         <div class="column is-three-quarters">

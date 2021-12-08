@@ -111,7 +111,7 @@ class DjUserUpdateView(LoginRequiredMixin, UpdateView):
         return self.request.user
 
     def get_success_url(self):
-        return reverse('user_detail')
+        return reverse('user_detail',  kwargs={'pk': self.request.user.id})
 
     def post(self, request, *args, **kwargs):
         self.object = self.get_object()
@@ -129,10 +129,14 @@ class FollowView(LoginRequiredMixin, View):
     def get(self, request, pk, *args, **kwargs):
         author = DjGrammUser.objects.get(pk=pk)
         viewer = DjGrammUser.objects.get(pk=request.user.id)
-        if author is not viewer:
-            if viewer not in author.followers.all():
-                # follower = Follower.objects.create(follower=viewer)
-                author.followers.create(follower=viewer)
-                viewer.following.create(following=author)
-                print()
+        if author != viewer:
+            if viewer not in [follower.follower for follower in author.followers.all()]:
+                follower = Follower(follower=viewer)
+                follower.save()
+                following = Following(following=author)
+                following.save()
+            else:
+                messages.error(request, 'You are already following the author.')
+        else:
+            messages.error(request, 'You can`t following yourself.')
         return redirect(request.META['HTTP_REFERER'])

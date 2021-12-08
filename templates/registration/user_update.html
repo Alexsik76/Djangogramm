@@ -5,7 +5,8 @@
         <form class="card column is-half" method="POST" enctype="multipart/form-data" action="{% url 'user_update' %}">
             <header class="card-header">
                 <h3 class="card-header-title is-size-2 has-text-grey-light">Detail view</h3>
-                <a class="button" href="{% url 'user_detail' %}"><i class="fas fa-times"></i></a>
+                <a class="button" href="{% url 'user_detail' user.id %}"><i class="fas fa-times"></i></a>
+                <p>User = {{ user }}, {{ user.id }}</p>
             </header>
             <div class="card-content">
                 <div class="content">
