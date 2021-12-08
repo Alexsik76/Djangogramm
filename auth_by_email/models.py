@@ -48,6 +48,7 @@ class DjGrammUser(AbstractUser):
     email = models.EmailField(_('email address'), blank=False, unique=True)
     bio = models.CharField(_('bio'), max_length=3, blank=False, choices=BIO_CHOICES)
     avatar = models.ImageField(upload_to='auth_by_email/users_avatars')
+    following = models.ManyToManyField('DjGrammUser', blank=True, related_name='followers')
     objects = DjGrammUserManager()
 
     REQUIRED_FIELDS = ['bio', 'avatar']
@@ -78,19 +79,19 @@ class DjGrammUser(AbstractUser):
         self.user_permissions.set(required_perms)
 
 
-class Follow(models.Model):
-    """
-    Followers are the users that follow you.
-    Following the list of users that you follow.
-    """
-    follower = models.ForeignKey(DjGrammUser,
-                                 on_delete=models.CASCADE,
-                                 null=True,
-                                 related_name="followers")
-    following = models.ForeignKey(DjGrammUser,
-                                  on_delete=models.CASCADE,
-                                  null=True,
-                                  related_name="following")
-
-    def __str__(self):
-        return f"{self.follower.email} following {self.following.email} "
+# class Follow(models.Model):
+#     """
+#     Followers are the users that follow you.
+#     Following the list of users that you follow.
+#     """
+#     follower = models.ForeignKey(DjGrammUser,
+#                                  on_delete=models.CASCADE,
+#                                  null=True,
+#                                  related_name="followers")
+#     following = models.ForeignKey(DjGrammUser,
+#                                   on_delete=models.CASCADE,
+#                                   null=True,
+#                                   related_name="following")
+#
+#     def __str__(self):
+#         return f"{self.follower.email} following {self.following.email} "

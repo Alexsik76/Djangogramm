@@ -64,22 +64,19 @@
                     <h4 class="title is-4">Following:</h4>
                 </div>
                 <div class="columns">
-
                     <div class="column is-half">
-
                         <h6 class="title is-6 has-text-centered">Followers:</h6>
                         <ul>
                             {% for folower in  dj_user.followers.all %}
-                                {{ folower.following }}
+                                {{ folower }}
                             {% endfor %}
                         </ul>
-
                     </div>
                     <div class="column">
                         <h6 class="title is-6 has-text-centered">Following:</h6>
                         <ul>
-                            {% for folowed in  dj_user.following.all %}
-                                {{ folowed.follower }}
+                            {% for folowed_user in  dj_user.following.all %}
+                                {{ folowed_user }}
                             {% endfor %}
                         </ul>
                     </div>
