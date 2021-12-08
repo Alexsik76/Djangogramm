@@ -78,27 +78,19 @@ class DjGrammUser(AbstractUser):
         self.user_permissions.set(required_perms)
 
 
-class Follower(models.Model):
+class Follow(models.Model):
     """
     Followers are the users that follow you.
+    Following the list of users that you follow.
     """
     follower = models.ForeignKey(DjGrammUser,
                                  on_delete=models.CASCADE,
                                  null=True,
                                  related_name="followers")
-
-    def __str__(self):
-        return self.follower.email
-
-
-class Following(models.Model):
-    """
-    Following the list of users that you follow.
-    """
     following = models.ForeignKey(DjGrammUser,
                                   on_delete=models.CASCADE,
                                   null=True,
                                   related_name="following")
 
     def __str__(self):
-        return self.following.email
+        return f"{self.follower.email} following {self.following.email} "

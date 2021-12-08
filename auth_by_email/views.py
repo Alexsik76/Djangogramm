@@ -14,7 +14,7 @@ from django.views import View
 from django.views.generic import UpdateView, DetailView
 
 from .forms import SignupForm, UserActivationForm, UserUpdateForm
-from .models import Follower, Following
+from .models import Follow
 
 # Create your views here.
 
@@ -130,13 +130,10 @@ class FollowView(LoginRequiredMixin, View):
         author = DjGrammUser.objects.get(pk=pk)
         viewer = DjGrammUser.objects.get(pk=request.user.id)
         if author != viewer:
-            if viewer not in [follower.follower for follower in author.followers.all()]:
-                follower = Follower(follower=viewer)
-                follower.save()
-                following = Following(following=author)
-                following.save()
+            if viewer not in [follower.following for follower in author.followers.all()]:
+                Follow.objects.create(follower=author, following=viewer)
             else:
-                messages.error(request, 'You are already following the author.')
+                messages.warning(request, 'You are already following the author.')
         else:
-            messages.error(request, 'You can`t following yourself.')
+            messages.warning(request, 'You can`t following yourself.')
         return redirect(request.META['HTTP_REFERER'])
