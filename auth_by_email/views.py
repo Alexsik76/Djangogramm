@@ -3,7 +3,10 @@ from django.contrib.auth import get_user_model, login, update_session_auth_hash
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.tokens import default_token_generator
 from django.contrib.sites.shortcuts import get_current_site
+from django.core.exceptions import ValidationError
 from django.core.mail import EmailMessage
+from django.db import IntegrityError
+from django.core.exceptions import ObjectDoesNotExist
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
 from django.template.loader import render_to_string
@@ -14,7 +17,7 @@ from django.views import View
 from django.views.generic import UpdateView, DetailView
 
 from .forms import SignupForm, UserActivationForm, UserUpdateForm
-# from .models import Follow
+from .models import Following
 
 # Create your views here.
 
@@ -127,11 +130,26 @@ class FollowView(LoginRequiredMixin, View):
     def get(self, request, pk, *args, **kwargs):
         author = self.object.objects.get(pk=pk)
         viewer = self.object.objects.get(pk=request.user.id)
-        if author != viewer:
-            if viewer not in [follower for follower in author.followers.all()]:
-                viewer.following.add(author)
-            else:
-                messages.warning(request, 'You are already following the author.')
-        else:
-            messages.warning(request, 'You can`t following yourself.')
+        try:
+            Following.follow(author, viewer)
+            messages.success(request, f'You are following the {author.get_full_name()}.')
+        except IntegrityError as e:
+            messages.warning(request, e)
+        except ValidationError as e:
+            messages.warning(request, e.message)
+        return redirect(request.META['HTTP_REFERER'])
+
+
+class UnfollowView(LoginRequiredMixin, View):
+    object = DjGrammUser
+
+    def get(self, request, pk, *args, **kwargs):
+        author = self.object.objects.get(pk=pk)
+        viewer = self.object.objects.get(pk=request.user.id)
+        try:
+            follower = author.followers.get(follower_user=viewer)
+            Following.unfollow(follower)
+            messages.success(request, f'You are unfollow the {author.get_full_name()}.')
+        except Following.DoesNotExist as e:
+            messages.warning(request, f'You are not follow the {author.get_full_name()}.')
         return redirect(request.META['HTTP_REFERER'])

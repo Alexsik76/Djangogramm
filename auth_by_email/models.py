@@ -1,4 +1,5 @@
 from django.conf import settings
+from django.core.exceptions import ValidationError
 from django.db import models
 from django.contrib.auth.models import AbstractUser, BaseUserManager
 from django.contrib.auth.models import Permission
@@ -48,7 +49,6 @@ class DjGrammUser(AbstractUser):
     email = models.EmailField(_('email address'), blank=False, unique=True)
     bio = models.CharField(_('bio'), max_length=3, blank=False, choices=BIO_CHOICES)
     avatar = models.ImageField(upload_to='auth_by_email/users_avatars')
-    following = models.ManyToManyField('DjGrammUser', blank=True, related_name='followers')
     objects = DjGrammUserManager()
 
     REQUIRED_FIELDS = ['bio', 'avatar']
@@ -77,3 +77,31 @@ class DjGrammUser(AbstractUser):
                               'add_post']
         required_perms = [Permission.objects.get(codename=perms_codename) for perms_codename in all_perms_codename]
         self.user_permissions.set(required_perms)
+
+
+class Following(models.Model):
+    follower_user = models.ForeignKey(DjGrammUser, related_name="following", on_delete=models.CASCADE)
+    following_user = models.ForeignKey(DjGrammUser, related_name="followers", on_delete=models.CASCADE)
+
+    class Meta:
+        constraints = [
+            models.CheckConstraint(check=models.Q("follower_user" != models.F("following_user")), name="not follow yourself"),
+            models.UniqueConstraint(fields=['follower_user', 'following_user'], name='unique_follow'),
+        ]
+
+    def __str__(self):
+        return f"{self.follower_user.get_full_name()} following {self.following_user.get_full_name()}"
+
+    def save(self, *args, **kwargs):
+        if self.follower_user == self.following_user:
+            raise ValidationError('You can`t following yourself.')
+        super().save(*args, **kwargs)
+
+    @classmethod
+    def follow(cls, following_user, follower_user):
+        cls.objects.create(following_user=following_user, follower_user=follower_user)
+
+    def unfollow(self):
+        self.delete()
+
+

@@ -51,10 +51,14 @@
                     <div class="column is-one-fifth">
                         <a class="button is-success" href="{% url 'user_update' %}">Edit profile</a>
                     </div>
+                    {% if user != dj_user %}
                     <div class="column is-one-fifth">
                         <a class="button is-primary is-light"
-                           href="{% url 'following' dj_user.id %}">Follow {{ dj_user.followers.count }}</a>
+                           href="{% url 'follow' dj_user.id %}">Follow {{ dj_user.followers.count }}</a>
+                        <a class="button is-danger is-light"
+                           href="{% url 'unfollow' dj_user.id %}">Unfollow</a>
                     </div>
+                    {% endif %}
                     {% include 'block_messages.html' %}
                 </div>
             </div>
@@ -68,7 +72,7 @@
                         <h6 class="title is-6 has-text-centered">Followers:</h6>
                         <ul>
                             {% for folower in  dj_user.followers.all %}
-                                {{ folower }}
+                                {{ folower.follower_user.email }}
                             {% endfor %}
                         </ul>
                     </div>
@@ -76,7 +80,7 @@
                         <h6 class="title is-6 has-text-centered">Following:</h6>
                         <ul>
                             {% for folowed_user in  dj_user.following.all %}
-                                {{ folowed_user }}
+                                {{ folowed_user.following_user.email }}
                             {% endfor %}
                         </ul>
                     </div>
