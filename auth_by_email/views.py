@@ -134,7 +134,7 @@ class FollowView(LoginRequiredMixin, View):
             Following.follow(author, viewer)
             messages.success(request, f'You are following the {author.get_full_name()}.')
         except IntegrityError as e:
-            messages.warning(request, e)
+            messages.warning(request, f'You are already follow the {author.get_full_name()}.')
         except ValidationError as e:
             messages.warning(request, e.message)
         return redirect(request.META['HTTP_REFERER'])
