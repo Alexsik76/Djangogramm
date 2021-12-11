@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.urls import reverse
 from django.views.generic import CreateView, UpdateView, DetailView, DeleteView, ListView
 from django.contrib.auth.mixins import PermissionRequiredMixin
@@ -8,6 +8,8 @@ from gramm_app.forms import PostCreateForm, PostUpdateForm
 
 
 def index(request):
+    if request.user.is_authenticated:
+        return redirect('post-list')
     return render(request, 'gramm_app/index.html')
 
 

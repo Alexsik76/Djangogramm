@@ -2,11 +2,16 @@
 {% block content %}
     {% load bulma_filters %}
     <div class="columns is-centered">
-    <form class="box column is-half" method="post" action="{% url 'signup' %}">
-        <h3 class="title">Signup form</h3>
-        {% csrf_token %}
-        {% form_bulma %}
-        {% button_bulma name='signup' %}
-    </form>
+        <div class="card column is-half">
+            <header class="card-header">
+                <h3 class="card-header-title is-size-3 has-text-grey-light">Signup form</h3>
+                <a class="delete" href="{% url 'index' %}"></a>
+            </header>
+            <form method="post">
+                {% csrf_token %}
+                {% form_bulma %}
+                {% button_bulma name='signup' %}
+            </form>
+        </div>
     </div>
 {% endblock %}

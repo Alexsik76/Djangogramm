@@ -3,8 +3,12 @@
 {% block content %}
     {% load bulma_filters %}
     <div class="columns is-centered">
-        <form class="box column is-half" method="post">
-            <h3 class="title">Log in form</h3>
+        <div class="card column is-half">
+            <header class="card-header">
+               <h3 class="card-header-title is-size-3 has-text-grey-light">Log in form</h3>
+                <a class="delete" href="{% url 'index' %}"></a>
+            </header>
+        <form method="post">
             {% csrf_token %}
             {% form_bulma %}
             <div class="field">
@@ -16,5 +20,6 @@
                 <h6 class="subtitle is-6">{% translate 'Forgotten your password?' %} <a href={% url 'password_reset' %}> {% translate 'Reset it' %}</a></h6>
             </div>
         </form>
+    </div>
     </div>
 {% endblock %}

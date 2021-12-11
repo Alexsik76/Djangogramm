@@ -1,16 +1,1 @@
-<div class="field">
-    <p id="hovered-icon" class="control has-icons-left">
-        <span class="select">
-          <select name="bio">
-              {% for group_name, group_choices, group_index in widget.optgroups %}
-                  {% for option in group_choices %}
-                      {% include option.template_name with widget=option %}
-                  {% endfor %}
-              {% endfor %}
-          </select>
-        </span>
-        <span class="icon is-small is-left">
-          <i class="fas fa-venus-mars"></i>
-        </span>
-    </p>
-</div>
+{% include 'auth_by_email/bulma_templates/widgets/select.html' %}

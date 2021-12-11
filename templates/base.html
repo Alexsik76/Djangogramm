@@ -4,26 +4,22 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     {% load static %}
-    {#    <link href="{% static '/font/css/all.css' %}" rel="stylesheet">#}
     <link rel=icon href=https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.15.4/svgs/brands/instagram.svg>
-    {#    <link rel="shortcut icon" href="{% static '/instagram_logo.png' %}"/>#}
     <title>{% block title %}DjangoGramm{% endblock %}</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.3/css/bulma.min.css">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css"
           integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+    <link href="{% static 'background.css' %}" rel="stylesheet">
 </head>
 <body>
-{% include 'navbar.html' %}
-<section class="section">
-    <div class="container">
-        <div id="sidebar">
-            {% block sidebar %}
-            {% endblock %}
+    {% include 'navbar.html' %}
+    <section class="section">
+        <div class="container">
+             {% block content %}{% endblock %}
         </div>
-        <div id="content">
-            {% block content %}{% endblock %}
-        </div>
-    </div>
-</section>
+    </section>
+    <div class="bg"></div>
+    <div class="bg bg2"></div>
+    <div class="bg bg3"></div>
 </body>
 </html>

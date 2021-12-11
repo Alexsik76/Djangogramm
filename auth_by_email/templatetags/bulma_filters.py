@@ -56,7 +56,7 @@ def bulma_field(context):
     }
 
 
-@register.inclusion_tag('auth_by_email/bulma_templates/form.html', takes_context=True)
+@register.inclusion_tag('auth_by_email/bulma_templates/form_content.html', takes_context=True)
 def form_bulma(context):
     form = context['form']
     return {
