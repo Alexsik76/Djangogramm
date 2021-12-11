@@ -1,11 +1,15 @@
 from django.contrib import admin
-from gramm_app.models import Post
+from gramm_app.models import Post, Like
 # Register your models here.
 
 
-# @admin.register(DjGrammUser)
-# class PersonAdmin(admin.ModelAdmin):
-#     list_display = ('id', 'first_name', 'last_name', 'email', 'bio')
+class LikeInline(admin.TabularInline):
+    model = Like
+    fk_name = 'liked'
 
 
-admin.site.register(Post)
+class LikeAdmin(admin.ModelAdmin):
+    inlines = [LikeInline, ]
+
+
+admin.site.register(Post, LikeAdmin)

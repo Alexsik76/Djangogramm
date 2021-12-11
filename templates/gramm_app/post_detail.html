@@ -28,15 +28,15 @@
                                 </tr>
                                 </tbody>
                             </table>
+                            {% include 'block_messages.html' %}
                         </div>
                     </div>
                 </div>
             </div>
         <footer class="card-footer">
-            <div class="buttons is-grouped">
-                <a class="button is-success" href="{% url 'post-update' pk=post.id %}">Edit post</a>
-                <a class="button is-danger" href="{% url 'post-delete' pk=post.id %}">Delete post</a>
-            </div>
+                <a class="card-footer-item button is-success" href="{% url 'post-update' pk=post.id %}">Edit post</a>
+                <a class="card-footer-item button is-danger" href="{% url 'post-delete' pk=post.id %}">Delete post</a>
+                <a class="button is-success is-flex-direction-column-reverse" href="{% url 'post-like' pk=post.id %}">{{ post.liked.count }} Like post</a>
         </footer>
         </div>
     </div>

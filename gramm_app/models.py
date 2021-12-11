@@ -44,11 +44,17 @@ class Post(models.Model):
 
 
 class Like(models.Model):
-    liker = models.ForeignKey(DjGrammUser,
-                              on_delete=models.CASCADE,
-                              null=True,
-                              related_name='liker')
-    liked = models.ForeignKey(Post,
-                              on_delete=models.CASCADE,
-                              null=True,
-                              related_name='liked')
+    liker = models.ForeignKey(DjGrammUser, on_delete=models.CASCADE, related_name='liker')
+    liked = models.ForeignKey(Post, on_delete=models.CASCADE, related_name='liked')
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(fields=['liked', 'liker'], name='unique_like'),
+        ]
+
+    @classmethod
+    def like(cls, liker, liked):
+        cls.objects.create(liker=liker, liked=liked)
+
+    def unlike(self):
+        self.delete()

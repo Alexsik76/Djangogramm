@@ -45,7 +45,9 @@
                                 </tr>
                                 </tbody>
                             </table>
+                            {% include 'block_messages.html' %}
                         </div>
+
                     </div>
                 </div>
             </div>
@@ -65,7 +67,7 @@
                         </div>
                     {% endif %}
                 </div>
-            {% include 'block_messages.html' %}
+
             </div>
             {% if dj_user == user %}
                 <div class="box">

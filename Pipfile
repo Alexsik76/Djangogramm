@@ -11,6 +11,7 @@ django-heroku = "*"
 psycopg2-binary = "*"
 coverage = "*"
 multiavatar = "*"
+tzdata = "*"
 
 [dev-packages]
 pytest = "*"
