@@ -3,6 +3,7 @@ from django.db import models
 from django.conf import settings
 from django.utils.translation import gettext_lazy as _
 from auth_by_email.models import DjGrammUser
+from cloudinary.models import CloudinaryField
 
 # Create your models here.
 
@@ -23,10 +24,8 @@ class PostManager(models.Manager):
 
 class Post(models.Model):
     title = models.CharField(_('Title'), max_length=256, blank=False)
-    image = models.ImageField(upload_to='pasts_images')
-    author = models.ForeignKey(DjGrammUser,
-                               on_delete=models.CASCADE,
-                               null=True)
+    image = CloudinaryField('image', folder='django_gramm/pasts_images')
+    author = models.ForeignKey(DjGrammUser, on_delete=models.CASCADE)
     objects = PostManager()
 
     def delete_media(self):

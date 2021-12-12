@@ -9,23 +9,32 @@ https://docs.djangoproject.com/en/3.2/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.2/ref/settings/
 """
-
+import environ
 from pathlib import Path
 import django_heroku
 import django
+import cloudinary
+import cloudinary.uploader
+import cloudinary.api
+
+env = environ.Env(
+    DEBUG=(bool, False)
+)
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
+
+environ.Env.read_env(BASE_DIR / '.env')
 
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-+u93bu_94_k=l##l!k4hq5poa=mkna4jsot-&8^%)0%u&r5ypl'
 
+SECRET_KEY = env('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = env('DEBUG')
 
 ALLOWED_HOSTS = []
 
@@ -42,6 +51,7 @@ INSTALLED_APPS = [
     'auth_by_email.apps.AuthByEmailConfig',
     'gramm_app.apps.GrammappConfig',
     'django.forms',
+    'cloudinary',
 ]
 
 MIDDLEWARE = [
@@ -57,8 +67,7 @@ MIDDLEWARE = [
 ROOT_URLCONF = 'django_gramm.urls'
 
 FORM_RENDERER = 'django.forms.renderers.TemplatesSetting'
-# FORM_RENDERER = 'django.forms.renderers.DjangoTemplates'
-# FORM_RENDERER = 'auth_by_email.bulma_forms.renderer.BulmaRenderer'
+
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
@@ -94,7 +103,6 @@ DATABASES = {
 AUTH_USER_MODEL = 'auth_by_email.DjGrammUser'
 LOGIN_REDIRECT_URL = 'index'
 LOGIN_URL = 'login'
-# LOGOUT_REDIRECT_URL = 'login'
 
 # Password validation
 # https://docs.djangoproject.com/en/3.2/ref/settings/#auth-password-validators
@@ -118,10 +126,8 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/3.2/topics/i18n/
 
-LANGUAGE_CODE = 'en-en'
-
-TIME_ZONE = 'Europe/Kiev'
-
+LANGUAGE_CODE = env('LANGUAGE_CODE')
+TIME_ZONE = env('TIME_ZONE')
 USE_I18N = True
 
 USE_L10N = True
@@ -138,8 +144,8 @@ STATICFILES_DIRS = [
     BASE_DIR / "static",
     BASE_DIR / "static/forms",
 ]
-MEDIA_ROOT = BASE_DIR / "media"
-MEDIA_URL = "/media/"
+MEDIA_ROOT = ""
+MEDIA_URL = ""
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
@@ -147,14 +153,18 @@ MEDIA_URL = "/media/"
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_BACKEND = env('EMAIL_BACKEND')
 MAILER_EMAIL_BACKEND = EMAIL_BACKEND
-EMAIL_HOST = 'smtp.i.ua'
-EMAIL_HOST_PASSWORD = 'lyedth12'
-EMAIL_HOST_USER = 'my_python@i.ua'
-EMAIL_PORT = 465
-EMAIL_USE_SSL = True
-DEFAULT_FROM_EMAIL = 'my_python@i.ua'
+EMAIL_HOST = env('EMAIL_HOST')
+EMAIL_HOST_PASSWORD = env('EMAIL_HOST_PASSWORD')
+EMAIL_HOST_USER = env('EMAIL_HOST_USER')
+EMAIL_PORT = env('EMAIL_PORT')
+EMAIL_USE_SSL = env('EMAIL_USE_SSL')
+DEFAULT_FROM_EMAIL = env('DEFAULT_FROM_EMAIL')
+
+
+CLOUDINARY_URL = env('CLOUDINARY_URL')
+
 
 from auth_by_email.auth_settings import *
 django_heroku.settings(locals())

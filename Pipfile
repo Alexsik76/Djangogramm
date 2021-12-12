@@ -12,6 +12,8 @@ psycopg2-binary = "*"
 coverage = "*"
 multiavatar = "*"
 tzdata = "*"
+cloudinary = "*"
+django-environ = "*"
 
 [dev-packages]
 pytest = "*"

@@ -5,6 +5,7 @@ from django.contrib.auth.models import AbstractUser, BaseUserManager
 from django.contrib.auth.models import Permission
 from django.utils.translation import gettext_lazy as _
 import logging
+from cloudinary.models import CloudinaryField
 # Create your models here.
 
 logger = logging.getLogger(__name__)
@@ -48,7 +49,7 @@ class DjGrammUser(AbstractUser):
     username = None
     email = models.EmailField(_('email address'), blank=False, unique=True)
     bio = models.CharField(_('bio'), max_length=3, blank=False, choices=BIO_CHOICES)
-    avatar = models.ImageField(upload_to='auth_by_email/users_avatars')
+    avatar = CloudinaryField('image', folder='django_gramm/avatars')
     objects = DjGrammUserManager()
 
     REQUIRED_FIELDS = ['bio', 'avatar']
