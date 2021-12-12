@@ -79,3 +79,32 @@ def get_file_name(value):
     except AttributeError as e:
         logger.info(e)
         return 'File not set'
+
+
+@register.filter
+def by_rows(page):
+    rows = []
+    page_like_list = list(page.object_list)
+    while page_like_list:
+        row = []
+        for i in range(3):
+            if page_like_list:
+                row.append(page_like_list.pop())
+            else:
+                break
+        rows.append(row)
+    return rows
+
+
+@register.inclusion_tag('gramm_app/bulma_templates/like_for_post.html', takes_context=True)
+def like_icon(context):
+    post = context['post']
+    user = context.request.user
+    if post.likes.filter(liker_id=user.id):
+        icon_class = 'fas fa-heart'
+    else:
+        icon_class = 'far fa-heart'
+    return {
+        'post': post,
+        'icon_class': icon_class
+    }

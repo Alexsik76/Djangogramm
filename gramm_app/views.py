@@ -68,7 +68,7 @@ class PostDeleteView(PermissionRequiredMixin, DeleteView):
 class PostListView(PermissionRequiredMixin, ListView):
     permission_required = 'gramm_app.view_post'
     model = Post
-    paginate_by = 3
+    paginate_by = 9
 
     def has_permission(self):
         perms = self.get_permission_required()

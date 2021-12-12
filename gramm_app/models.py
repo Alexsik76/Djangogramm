@@ -44,8 +44,8 @@ class Post(models.Model):
 
 
 class Like(models.Model):
-    liker = models.ForeignKey(DjGrammUser, on_delete=models.CASCADE, related_name='liker')
-    liked = models.ForeignKey(Post, on_delete=models.CASCADE, related_name='liked')
+    liker = models.ForeignKey(DjGrammUser, on_delete=models.CASCADE, related_name='likes')
+    liked = models.ForeignKey(Post, on_delete=models.CASCADE, related_name='likes')
 
     class Meta:
         constraints = [

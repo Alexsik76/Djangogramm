@@ -1,0 +1,35 @@
+{% load bulma_filters %}
+<div class="columns">
+    <div class="column is-three-fifths">
+        <table class="table">
+            <tbody>
+            <tr>
+                <th>Title</th>
+                <td><a href="{% url 'post-detail' post.id %}">{{ post.title }}</a></td>
+            </tr>
+            <tr>
+                <th>File</th>
+                <td>{{ post.image|get_file_name }}</td>
+            </tr>
+            <tr>
+                <th>Author</th>
+                <td>
+                    <a href="{% url 'user_detail' post.author.id %}">{{ post.author.get_full_name }}</a>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="column">
+        <div class="box" style="width: 128px" >
+            <figure class="image" style="width: 96px">
+                {% if post.image %}
+                    <img id="imgPrev" src="{{ post.image.url }}" alt="Loaded image"/>
+                {% else %}
+                    <img id="imgPrev" src="https://via.placeholder.com/150" alt="Loaded image"/>
+                {% endif %}
+            </figure>
+        </div>
+        {% like_icon %}
+    </div>
+</div>
