@@ -62,9 +62,6 @@ class PostModelTest(TestCase):
                                         image='image.png',
                                         author=user)
 
-    def test_post_url(self):
-        self.assertEqual(self.post.image.url, '/media/image.png')
-
     def test_delete_post(self):
         self.post.delete()
         with self.assertRaises(self.post.DoesNotExist):

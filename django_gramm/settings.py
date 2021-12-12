@@ -48,10 +48,11 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'cloudinary',
     'auth_by_email.apps.AuthByEmailConfig',
     'gramm_app.apps.GrammappConfig',
     'django.forms',
-    'cloudinary',
+
 ]
 
 MIDDLEWARE = [
@@ -80,6 +81,9 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'django.template.context_processors.static',
+                'django.template.context_processors.media',
+                'django.template.context_processors.tz',
             ],
             'libraries': {
                 'templatetags': 'auth_by_email.templatetags.bulma_filters'
@@ -134,16 +138,17 @@ USE_L10N = True
 
 USE_TZ = True
 
+DISABLE_COLLECTSTATIC = 1
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
 
-
+STATIC_ROOT = ''
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [
     BASE_DIR / "static",
-    BASE_DIR / "static/forms",
 ]
+
 MEDIA_ROOT = ""
 MEDIA_URL = ""
 
