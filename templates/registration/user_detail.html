@@ -1,0 +1,142 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load bulma_filters %}
+{% block content %}
+    <div class="columns is-centered">
+        <div class="card column is-half">
+            <header class="card-header">
+                <h3 class="card-header-title is-size-2 has-text-grey-light">User detail</h3>
+                <a class="delete" href="{% url 'index' %}"></a>
+            </header>
+            <div class="card-content">
+                <div class="content">
+                    <div class="columns">
+                        <div class="column is-two-fifths">
+                            <figure class="image" style="width: 128px">
+                                {% if dj_user.avatar %}
+                                    <img id="imgPrev" src="{{ dj_user.avatar.url }}" alt="Loaded image"/>
+                                {% else %}
+                                    <img id="imgPrev" src="{% static 'avatar_placeholder.png' %}" alt="Loaded image"/>
+                                {% endif %}
+                            </figure>
+                            <div class="tags has-addons">
+                                <span class="tag is-dark">followers</span>
+                                <span class="tag is-success">{{ dj_user.followers.count }}</span>
+                            </div>
+                        </div>
+                        <div class="column">
+                            <table class="table">
+                                <tbody>
+                                <tr>
+                                    <th>First name</th>
+                                    <td>{{ dj_user.first_name }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Last name</th>
+                                    <td>{{ dj_user.last_name }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Email</th>
+                                    <td>{{ dj_user.email }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Bio</th>
+                                    <td>{{ dj_user.bio }}</td>
+                                </tr>
+                                </tbody>
+                            </table>
+                            {% include 'block_messages.html' %}
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+            <div class="box">
+                <div class="columns">
+                    <div class="column is-one-fifth">
+                        <a class="button is-success" href="{% url 'user_update' %}">Edit profile</a>
+                    </div>
+                    {% if user != dj_user %}
+                        <div class="column is-5 is-offset-5">
+                            <div class="buttons">
+                                <a class="button is-primary is-light"
+                                   href="{% url 'follow' dj_user.id %}">Follow</a>
+                                <a class="button is-danger is-light"
+                                   href="{% url 'unfollow' dj_user.id %}">Unfollow</a>
+                            </div>
+                        </div>
+                    {% endif %}
+                </div>
+
+            </div>
+            {% if dj_user == user %}
+                <div class="box">
+                    <div class="columns">
+                        <div class="column is-half">
+                            <table class="table">
+                                <thead>
+                                <tr>
+                                    <th>Followers</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {% for folower in dj_user.followers.all %}
+                                    <td>{{ folower.follower_user.get_full_name }}</td>
+                                {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="column is-half">
+                            <table class="table">
+                                <thead>
+                                <tr>
+                                    <th>Following</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {% for folowed_user in dj_user.following.all %}
+                                    <td>{{ folowed_user.following_user.get_full_name }}</td>
+                                {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            {% endif %}
+            <div class="box">
+                <div class="block has-text-centered">
+                    <h4 class="title is-4">Posts:</h4>
+                </div>
+                {% for post in dj_user.post_set.all %}
+                    <div class="box">
+                        <div class="columns">
+                            <div class="column is-three-fifths">
+                                <table class="table">
+                                    <tbody>
+                                    <tr>
+                                        <th>Title</th>
+                                        <td>{{ post.title }}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>File</th>
+                                        <td>{{ post.image|get_file_name }}</td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="column">
+                                <figure class="image has-text-centered" style="width: 96px">
+                                    {% if post.image %}
+                                        <img id="imgPrev" src="{{ post.image.url }}" alt="Loaded image"/>
+                                    {% else %}
+                                        <img id="imgPrev" src="https://via.placeholder.com/150" alt="Loaded image"/>
+                                    {% endif %}
+                                </figure>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+{% endblock %}

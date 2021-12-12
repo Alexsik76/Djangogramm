@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+{% block content %}
+    {% include 'block_messages.html' %}
+    <div class="columns is-centered">
+        <form class="card column is-half" method="POST" enctype="multipart/form-data" action="{% url 'user_update' %}">
+            <header class="card-header">
+                <h3 class="card-header-title is-size-2 has-text-grey-light">User update</h3>
+                <a class="delete" href="{% url 'user_detail' user.id %}"></a>
+            </header>
+            <div class="card-content">
+                <div class="content">
+                    {% load bulma_filters %}
+                    {% csrf_token %}
+                    {% form_bulma %}
+                    {{ form.media }}
+                    {% button_bulma name='update' %}
+                    <p>Django do not store your password. So you can only <a href="{% url 'password_reset' %}">reset</a> it.</p>
+                </div>
+            </div>
+        </form>
+    </div>
+{% endblock %}
