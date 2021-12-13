@@ -8,7 +8,6 @@ django = "*"
 pillow = "*"
 gunicorn = "*"
 django-heroku = "*"
-psycopg2-binary = "*"
 coverage = "*"
 multiavatar = "*"
 tzdata = "*"
@@ -19,4 +18,4 @@ django-environ = "*"
 pytest = "*"
 
 [requires]
-python_version = "3.9"
+python_version = "3.10"
