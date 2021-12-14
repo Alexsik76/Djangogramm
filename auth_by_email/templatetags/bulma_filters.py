@@ -8,35 +8,68 @@ logger = logging.getLogger(__name__)
 register = template.Library()
 
 
-def get_field_attr(field: str, attr_name: str) -> str:
-    obj = settings.FIELDS_ATTR.get(field, 'unknown')
+def get_field_attr(field_type: str, attr_name: str) -> str:
+    """
+    Gets placeholder or fas-icon depending on field type from dict.
+    FIELD_ATTR: Dict(key(str): field type;
+                     value(dataclass.object): contains object of the class FieldAttrs:
+                                                                                 placeholder: str
+                                                                                 icon: str
+    )
+    Provided types of te fields: [
+                                unknown
+                                email
+                                username
+                                first_name
+                                last_name
+                                avatar
+                                bio
+                                password
+                                password1
+                                password2
+                                new_password1
+                                new_password2
+                                title
+                                image]
+        For existing types of the fields returns placeholder "field" and icon "fas fa-question-circle"
+        For existing names of the attribute (not placeholder or icon) returns empty string
+     """
+    obj = settings.FIELDS_ATTR.get(field_type, 'unknown')
     attr = getattr(obj, attr_name, '')
     return attr
 
 
 def add_error_class(field):
+    """Creates is-danger for the field with errors."""
     if not field.errors:
         return ''
     return ' is-danger'
 
 
 def add_placeholder(field):
+    """Creates a specific placeholder for the field depending on its type."""
     placeholder = get_field_attr(field.name, 'placeholder')
     return placeholder
 
 
 def add_alert_icon(field):
+    """Adds alert icon to the field with errors"""
     if not field.errors:
         return ''
     return mark_safe('<span class="icon is-small is-right"><i class="fas fa-exclamation-triangle"></i></span>')
 
 
 def add_field_icon(field):
+    """
+    Creates a specific icon for the field depending on its type.
+    See the list of supported classes in the docstring fot the get_field_attrs()
+    """
     icon = get_field_attr(field.name, 'icon')
     return '' if not icon else mark_safe(f'<span class="icon is-small is-left"><i class="{icon}"></i></span>')
 
 
 def update_widget_attrs(field, widget):
+    """Adds extra attributes for the widget"""
     attrs = {'class': f"input{add_error_class(field)}",
              'id': field.auto_id,
              'placeholder': add_placeholder(field),
@@ -46,6 +79,7 @@ def update_widget_attrs(field, widget):
 
 @register.inclusion_tag('auth_by_email/bulma_templates/field.html', takes_context=True)
 def bulma_field(context):
+    """Creates field with bulma's markup."""
     field = context['field']
     widget = field.field.widget
     update_widget_attrs(field, widget)
@@ -58,6 +92,7 @@ def bulma_field(context):
 
 @register.inclusion_tag('auth_by_email/bulma_templates/form_content.html', takes_context=True)
 def form_bulma(context):
+    """Creates form with bulma's markup"""
     form = context['form']
     return {
         'form': form,
@@ -66,6 +101,7 @@ def form_bulma(context):
 
 @register.inclusion_tag('auth_by_email/bulma_templates/button.html')
 def button_bulma(btn_class='is-success', name='Submit'):
+    """Creates button with bulma classes"""
     return {'btn_class': btn_class,
             'btn_name': name.capitalize()
             }
@@ -73,6 +109,7 @@ def button_bulma(btn_class='is-success', name='Submit'):
 
 @register.filter
 def get_file_name(value):
+    """Cuts filename from full path to file."""
     try:
         items_value = value.url.split('/')
         return items_value[-1]
@@ -83,6 +120,10 @@ def get_file_name(value):
 
 @register.filter
 def by_rows(page):
+    """
+    Splits posts in the page to rows by 3 post in the row.
+    Return list of rows.
+    """
     rows = []
     page_like_list = list(page.object_list)
     while page_like_list:
@@ -98,6 +139,7 @@ def by_rows(page):
 
 @register.inclusion_tag('gramm_app/bulma_templates/like_for_post.html', takes_context=True)
 def like_icon(context):
+    """Creates filled icon if request.user liked this post. Otherwise, icon will be not filled"""
     post = context['post']
     user = context.request.user
     if post.likes.filter(liker_id=user.id):
