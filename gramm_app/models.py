@@ -1,6 +1,5 @@
 import logging
 from django.db import models
-from django.conf import settings
 from django.utils.translation import gettext_lazy as _
 from auth_by_email.models import DjGrammUser
 import cloudinary.api
@@ -30,15 +29,7 @@ class Post(models.Model):
     objects = PostManager()
 
     def delete_media(self):
-
         cloudinary.api.delete_resources([self.image])
-        # try:
-        #     file_name = settings.BASE_DIR / self.image.
-        #     if file_name.exists():
-        #         self.image.file.close()
-        #         file_name.unlink()
-        # except (AttributeError, ValueError, FileNotFoundError) as e:
-        #     logger.info(e)
 
     def delete(self, using=None, keep_parents=False):
         self.delete_media()

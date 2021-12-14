@@ -1,9 +1,7 @@
 from django.test import TestCase, Client
 from django.urls import reverse
-from urllib3.util import parse_url
-
-from auth_by_email.models import DjGrammUser
-from gramm_app.models import Post
+from django.core.exceptions import ValidationError
+from auth_by_email.models import DjGrammUser, Following
 import random
 import cloudinary
 from cloudinary import CloudinaryResource
@@ -12,6 +10,7 @@ from cloudinary.models import CloudinaryField
 # Create your tests here.
 SUFFIX = random.randint(10000, 99999)
 API_TEST_ID = "dj_test_{}".format(SUFFIX)
+
 
 class SignupViewTest(TestCase):
     def test_signup(self):
@@ -84,7 +83,7 @@ class AllAuthByEmailViewsTest(TestCase):
         response = c.get(reverse('password_reset_complete'))
         self.assertEqual(response.status_code, 200)
 
-    def test_follow(self):
+    def test_follow_view(self):
         c = Client(HTTP_REFERER=reverse('signup'))
         c.login(email='example@email.com', password='password12')
         response = c.get(reverse('follow', args=[1]))
@@ -106,6 +105,12 @@ class DjUserModelTest(TestCase):
                                                 last_name='Snow',
                                                 password='password12')
         user.grant_user_permissions()
+        DjGrammUser.objects.create_superuser(email='admin@email.com',
+                                             password='adminpassword')
+
+    def test_create_superuser(self):
+        admin = DjGrammUser.objects.get(email='admin@email.com')
+        self.assertTrue(admin.is_superuser)
 
     def test_user_ful_name(self):
         john = DjGrammUser.objects.get(first_name='John')
@@ -132,25 +137,7 @@ class DjUserModelTest(TestCase):
         response = self.client.get(reverse('post-list'))
         self.assertEqual(response.status_code, 302)
 
-
-class PostModelTest(TestCase):
-    def setUp(self) -> None:
-        user = DjGrammUser.objects._create_user(email='example@email.com',
-                                                bio='mister',
-                                                avatar='picture.png',
-                                                first_name='John',
-                                                last_name='Snow',
-                                                password='password12'
-                                                )
-
-        self.post = Post.objects.create(title='picture',
-                                        image='image.png',
-                                        author=user)
-
-    def test_delete_post(self):
-        self.post.delete()
-        with self.assertRaises(self.post.DoesNotExist):
-            Post.objects.get(title='picture')
-
-
-
+    def test_follow_self(self):
+        user = DjGrammUser.objects.get(first_name='John')
+        with self.assertRaises(ValidationError):
+            Following.follow(user, user)

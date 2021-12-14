@@ -1,4 +1,3 @@
-from django.conf import settings
 from django.core.exceptions import ValidationError
 from django.db import models
 from django.contrib.auth.models import AbstractUser, BaseUserManager
@@ -6,6 +5,7 @@ from django.contrib.auth.models import Permission
 from django.utils.translation import gettext_lazy as _
 import logging
 from cloudinary.models import CloudinaryField
+import cloudinary.api
 # Create your models here.
 
 logger = logging.getLogger(__name__)
@@ -49,23 +49,17 @@ class DjGrammUser(AbstractUser):
     username = None
     email = models.EmailField(_('email address'), blank=False, unique=True)
     bio = models.CharField(_('bio'), max_length=3, blank=False, choices=BIO_CHOICES)
-    avatar = CloudinaryField('image', folder='django_gramm/avatars')
+    avatar = CloudinaryField('image', blank=False, folder='django_gramm/avatars')
     objects = DjGrammUserManager()
 
-    REQUIRED_FIELDS = ['bio', 'avatar']
     USERNAME_FIELD = 'email'
+    REQUIRED_FIELDS = []
 
     def __str__(self):
         return self.email
 
     def delete_media(self):
-        try:
-            file_name = settings.BASE_DIR / self.avatar.file.name
-            if file_name.exists():
-                self.avatar.file.close()
-                file_name.unlink()
-        except (AttributeError, ValueError, FileNotFoundError) as e:
-            logger.info(e)
+        cloudinary.api.delete_resources([self.avatar])
 
     def delete(self, using=None, keep_parents=False):
         self.delete_media()
@@ -103,5 +97,3 @@ class Following(models.Model):
 
     def unfollow(self):
         self.delete()
-
-
