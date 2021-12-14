@@ -131,7 +131,7 @@ class FollowView(LoginRequiredMixin, View):
         try:
             Following.follow(author, viewer)
             messages.success(request, f'You are following the {author.get_full_name()}.')
-        except IntegrityError as e:
+        except IntegrityError:
             messages.warning(request, f'You are already follow the {author.get_full_name()}.')
         except ValidationError as e:
             messages.warning(request, e.message)
@@ -148,6 +148,6 @@ class UnfollowView(LoginRequiredMixin, View):
             follower = author.followers.get(follower_user=viewer)
             Following.unfollow(follower)
             messages.success(request, f'You are unfollow the {author.get_full_name()}.')
-        except Following.DoesNotExist as e:
+        except Following.DoesNotExist:
             messages.warning(request, f'You are not follow the {author.get_full_name()}.')
         return redirect(request.META['HTTP_REFERER'])

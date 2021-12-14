@@ -2,20 +2,20 @@
 {% block content %}
     {% load bulma_filters %}
     <div class="columns is-centered">
-     <div class="card column is-half">
+        <div class="card column is-half">
             <header class="card-header">
-               <h3 class="card-header-title is-size-3 has-text-grey-light">Delete post</h3>
+                <h3 class="card-header-title is-size-3 has-text-grey-light">Delete post</h3>
                 <a class="delete" href="{% url 'post-detail' post.id %}"></a>
             </header>
             <div class="card-content">
-        <form method="POST">
-            <h5 class="subtitle">Post {{ post.title }} will be deleted</h5>
-            {% csrf_token %}
-                <p class="control">
-                    {% button_bulma name='confirm' %}
-                </p>
-        </form>
-    </div>
-     </div>
+                <form method="POST">
+                    <h5 class="subtitle">Post {{ post.title }} will be deleted</h5>
+                    {% csrf_token %}
+                    <p class="control">
+                        {% button_bulma name='confirm' %}
+                    </p>
+                </form>
+            </div>
+        </div>
     </div>
 {% endblock %}

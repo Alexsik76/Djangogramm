@@ -123,20 +123,6 @@ class DjUserModelTest(TestCase):
         self.assertEqual(user.has_perm('gramm_app.view_post'), True)
         self.assertEqual(user.has_perm('gramm_app.delete_post'), True)
 
-    def test_create_post(self):
-        c = Client()
-        c.login(email='example@email.com', password='password12')
-        response = c.get(reverse('post-create'))
-        self.assertEqual(response.status_code, 200)
-
-    def test_create_post_anonimus(self):
-        response = self.client.get(reverse('post-create'))
-        self.assertEqual(response.status_code, 302)
-
-    def test_post_list_anonimus(self):
-        response = self.client.get(reverse('post-list'))
-        self.assertEqual(response.status_code, 302)
-
     def test_follow_self(self):
         user = DjGrammUser.objects.get(first_name='John')
         with self.assertRaises(ValidationError):

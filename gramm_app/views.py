@@ -90,7 +90,7 @@ class LikeView(PermissionRequiredMixin, View):
         try:
             Like.like(viewer, post)
             messages.success(request, f'You are like the {post.title}.')
-        except IntegrityError as e:
+        except IntegrityError:
             messages.warning(request, f'You are already like the {post.title}.')
         except ValidationError as e:
             messages.warning(request, e.message)

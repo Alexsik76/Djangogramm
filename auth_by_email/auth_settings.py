@@ -1,3 +1,4 @@
+# Contains placeholders anf icons for the used in the project templatetags
 from dataclasses import dataclass
 
 

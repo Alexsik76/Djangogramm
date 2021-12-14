@@ -47,5 +47,3 @@ class LoginForm(AuthenticationForm):
     class Meta:
         model = DjGrammUser
         fields = ('email', 'password')
-
-

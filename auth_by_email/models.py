@@ -13,6 +13,11 @@ logger = logging.getLogger(__name__)
 
 class MyQuerySet(models.QuerySet):
     def delete(self):
+        """
+        Extended for the delete users avatar after delete user. This needs because:
+        "Keep in mind that this will, whenever possible, be executed purely in SQL,
+        and so the delete() methods of individual object instances will not necessarily be called during the process".
+        """
         for item in self:
             item.delete_media()
         return super().delete()
@@ -24,6 +29,7 @@ class DjGrammUserManager(BaseUserManager):
         return MyQuerySet(model=self.model, using=self._db, hints=self._hints)
 
     def _create_user(self, email, password, **extra_fields):
+        """Creates user on stage signup or with createsuperuser command. Because has a minimal needed fields"""
         if not email:
             raise ValueError('The email must be set')
         email = self.normalize_email(email)
@@ -33,6 +39,7 @@ class DjGrammUserManager(BaseUserManager):
         return user
 
     def create_superuser(self, email, password, **extra_fields):
+        """Creates superuser"""
         extra_fields.setdefault('is_staff', True)
         extra_fields.setdefault('is_superuser', True)
         extra_fields.setdefault('is_active', True)
@@ -66,6 +73,7 @@ class DjGrammUser(AbstractUser):
         return super().delete()
 
     def grant_user_permissions(self):
+        """Grant standard permissions for the  most views"""
         all_perms_codename = ['view_post',
                               'delete_post',
                               'change_post',
@@ -75,6 +83,12 @@ class DjGrammUser(AbstractUser):
 
 
 class Following(models.Model):
+    """
+    Followers are the users that follow you.
+    Following refers to the list of users that you follow.
+        Meta.constraints forbids tracking a user more than once.
+        Modified method save forbids tracking oneself.
+    """
     follower_user = models.ForeignKey(DjGrammUser, related_name="following", on_delete=models.CASCADE)
     following_user = models.ForeignKey(DjGrammUser, related_name="followers", on_delete=models.CASCADE)
 

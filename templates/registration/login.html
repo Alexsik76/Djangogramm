@@ -5,21 +5,22 @@
     <div class="columns is-centered">
         <div class="card column is-half">
             <header class="card-header">
-               <h3 class="card-header-title is-size-3 has-text-grey-light">Log in form</h3>
+                <h3 class="card-header-title is-size-3 has-text-grey-light">Log in form</h3>
                 <a class="delete" href="{% url 'index' %}"></a>
             </header>
-        <form method="post">
-            {% csrf_token %}
-            {% form_bulma %}
-            <div class="field">
-                <div class="control">
-                    {% button_bulma name='login' %}
+            <form method="post">
+                {% csrf_token %}
+                {% form_bulma %}
+                <div class="field">
+                    <div class="control">
+                        {% button_bulma name='login' %}
+                    </div>
                 </div>
-            </div>
-            <div class="block has-text-centered">
-                <h6 class="subtitle is-6">{% translate 'Forgotten your password?' %} <a href={% url 'password_reset' %}> {% translate 'Reset it' %}</a></h6>
-            </div>
-        </form>
-    </div>
+                <div class="block has-text-centered">
+                    <h6 class="subtitle is-6">{% translate 'Forgotten your password?' %} <a
+                            href={% url 'password_reset' %}> {% translate 'Reset it' %}</a></h6>
+                </div>
+            </form>
+        </div>
     </div>
 {% endblock %}
