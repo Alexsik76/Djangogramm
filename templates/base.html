@@ -7,13 +7,17 @@
     {% load static %}
     <link rel=icon href=https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.15.4/svgs/brands/instagram.svg>
     <title>{% block title %}DjangoGramm{% endblock %}</title>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/javascript-canvas-to-blob/3.29.0/js/canvas-to-blob.min.js"
-            integrity="sha512-zkt2aBQ0jhSXjI6VhJegNqBN3Kqlbi7PxpxOpELGoKtRGSuPOVGvetuTixdhQSuRefsFKroRgWRwQDpRcMd3+A=="
-            crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.3/css/bulma.min.css">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css"
           integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
     <link rel="stylesheet" type="text/css" href="{% static 'background.css' %}">
+{#        {% if env_name == 'production' %}#}
+{#            <script src="https://cdn.jsdelivr.net/npm/vue"></script>#}
+{#        {% else %}#}
+{#            <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>#}
+{#        {% endif %}#}
+        <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+        <script src="https://unpkg.com/vue@next"></script>
 </head>
 <body>
     {% include 'navbar.html' %}

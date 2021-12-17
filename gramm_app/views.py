@@ -5,6 +5,7 @@ from django.shortcuts import render, redirect
 from django.db import IntegrityError
 from django.core.exceptions import ValidationError
 from django.urls import reverse
+from django.http import JsonResponse
 from django.views.generic import CreateView, UpdateView, DetailView, DeleteView, ListView, View
 from django.contrib.auth.mixins import PermissionRequiredMixin
 from gramm_app.models import Post, Like
@@ -95,3 +96,11 @@ class LikeView(PermissionRequiredMixin, View):
         except ValidationError as e:
             messages.warning(request, e.message)
         return redirect(request.META['HTTP_REFERER'])
+
+
+def is_was_liker(request, pk):
+    post = Post.objects.get(pk=pk)
+    if post.likes.filter(liker_id=request.user.id):
+        return JsonResponse({'likes': True})
+    else:
+        return JsonResponse({'likes': False})

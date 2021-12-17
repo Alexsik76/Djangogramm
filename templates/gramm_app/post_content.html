@@ -1,3 +1,4 @@
+{% load static %}
 {% load bulma_filters %}
 <div class="columns">
     <div class="column is-three-fifths">
@@ -30,6 +31,19 @@
                 {% endif %}
             </figure>
         </div>
-        {% like_icon %}
+{#        {% like_icon %}#}
+    {{ post.id| json_script:"post_id" }}
+        <script>
+            const post_url = "{% url 'is-liker' post.id %}"
+        </script>
+    <div id="vue-icon" class="is-pulled-right m-0 p-0">
+     <a class="m-0 p-0" href="{% url 'post-like' post.id %}">
+         <span  class="icon-text has-text-danger">
+            <i v-bind:class=[[my_icon]]> {{ post.likes.count }}</i>
+        </span>
+     </a>
     </div>
+    </div>
+<script type="text/javascript" src="{% static 'vue_like.js' %}"></script>
 </div>
+
