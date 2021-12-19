@@ -3,6 +3,7 @@
 {% load bulma_filters %}
 {% block content %}
     <h4 class="title">Posts:</h4>
+    <div id="like-icon-vue" >
     {% for row in page_obj|by_rows %}
         <div class="tile is-ancestor">
             {% for post in row %}
@@ -45,4 +46,9 @@
             {% endif %}
         </ul>
     </nav>
+    </div>
+    <script type="module">
+        import app from "{% static 'vue_js/like_icon_vue.js' %}";
+        app.mount('#like-icon-vue')
+    </script>
 {% endblock %}

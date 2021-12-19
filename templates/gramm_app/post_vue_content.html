@@ -31,16 +31,16 @@
                 {% endif %}
             </figure>
         </div>
-        <div id="like-icon-vue-{{ post.id }}" class="is-pulled-right m-0 p-0">
+        <div class="is-pulled-right m-0 p-0">
         <like_icon_vue post_id="{{ post.id }}"
                        post_likes_count="{{ post.likes.count }}"
                        props_is_liked={{ post|is_liked:user}}>
         </like_icon_vue>
         </div>
     </div>
-    <script type="module">
-        import createMyApp from "{% static 'vue_js/like_icon_vue.js' %}";
-        createMyApp().mount('#like-icon-vue-{{ post.id }}')
-    </script>
+{#    <script type="module">#}
+{#        import app from "{% static 'vue_js/like_icon_vue.js' %}";#}
+{#        app.mount('#like-icon-vue')#}
+{#    </script>#}
 </div>
 

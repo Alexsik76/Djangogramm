@@ -1,10 +1,9 @@
-const createMyApp = () => Vue.createApp()
-// const app = Vue.createApp({
-//     delimiters: ['[[', ']]'],
-// })
-
-export default createMyApp.component('like_icon_vue', {
+// const createMyApp = () => Vue.createApp()
+const app = Vue.createApp({
     delimiters: ['[[', ']]'],
+})
+
+export default app.component('like_icon_vue', {
     props: ['post_id', 'post_likes_count', 'props_is_liked'],
     data() {
         return {
