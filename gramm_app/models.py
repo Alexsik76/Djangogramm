@@ -35,6 +35,9 @@ class Post(models.Model):
         self.delete_media()
         return super().delete()
 
+    def is_liked(self, user):
+        return self.likes.filter(liker_id=user.id).exists()
+
 
 class Like(models.Model):
     liker = models.ForeignKey(DjGrammUser, on_delete=models.CASCADE, related_name='likes')

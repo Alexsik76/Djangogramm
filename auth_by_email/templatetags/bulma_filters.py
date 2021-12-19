@@ -2,7 +2,7 @@ from django import template
 from django.utils.safestring import mark_safe
 from django.conf import settings
 import logging
-
+import json
 
 logger = logging.getLogger(__name__)
 register = template.Library()
@@ -141,8 +141,8 @@ def by_rows(page):
 def like_icon(context):
     """Creates filled icon if request.user liked this post. Otherwise, icon will be not filled"""
     post = context['post']
-    user = context.request.user
-    if post.likes.filter(liker_id=user.id):
+    user = context['user']
+    if is_liked(post, user):
         icon_class = 'fas fa-heart'
     else:
         icon_class = 'far fa-heart'
@@ -150,3 +150,10 @@ def like_icon(context):
         'post': post,
         'icon_class': icon_class
     }
+
+
+@register.filter
+def is_liked(post, user):
+    return json.dumps(post.is_liked(user))
+    # return json.dumps(True)
+

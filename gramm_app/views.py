@@ -5,11 +5,15 @@ from django.shortcuts import render, redirect
 from django.db import IntegrityError
 from django.core.exceptions import ValidationError
 from django.urls import reverse
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponse
 from django.views.generic import CreateView, UpdateView, DetailView, DeleteView, ListView, View
 from django.contrib.auth.mixins import PermissionRequiredMixin
 from gramm_app.models import Post, Like
 from gramm_app.forms import PostCreateForm, PostUpdateForm
+from asgiref.sync import sync_to_async
+import json
+
+
 # Create your views here.
 
 
@@ -98,9 +102,46 @@ class LikeView(PermissionRequiredMixin, View):
         return redirect(request.META['HTTP_REFERER'])
 
 
+class LikeView2(PermissionRequiredMixin, View):
+    permission_required = 'gramm_app.view_post'
+    post_model = Post
+
+    @functools.cached_property
+    def user_model(self):
+        return get_user_model()
+
+    def get(self, request, *args, **kwargs):
+        pk = self.kwargs.get('pk')
+        post = self.post_model.objects.get(pk=pk)
+        is_liker = post.likes.filter(liker_id=request.user.id).exists()
+        likes_count = post.likes.count()
+        return JsonResponse({'liker': is_liker,
+                             'likes': likes_count})
+
+    def post(self, request, *args, **kwargs):
+        request_body = json.loads(request.body)
+        viewer = self.user_model.objects.get(pk=request_body.get('user_id'))
+        post = Post.objects.get(pk=request_body.get('post_id'))
+        is_liker = post.likes.filter(liker_id=request.user.id).exists()
+        try:
+            if not is_liker:
+                Like.like(viewer, post)
+                messages.success(request, f'You are like the {post.title}.')
+            else:
+                like = Like.objects.filter(liker_id=request.user.id).first()
+                like.delete()
+                messages.warning(request, f'You are unlike the {post.title}.')
+        except IntegrityError:
+            messages.warning(request, f'You are already like the {post.title}.')
+        except ValidationError as e:
+            messages.warning(request, e.message)
+        return HttpResponse(status=200)
+
+
+@sync_to_async
 def is_was_liker(request, pk):
     post = Post.objects.get(pk=pk)
-    if post.likes.filter(liker_id=request.user.id):
-        return JsonResponse({'likes': True})
-    else:
-        return JsonResponse({'likes': False})
+    is_liker = post.likes.filter(liker_id=request.user.id).exists()
+    likes_count = post.likes.count()
+    return JsonResponse({'liker': is_liker,
+                         'likes': likes_count})
