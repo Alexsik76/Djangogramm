@@ -6,7 +6,7 @@ import ImagePreview from "./components/image_preview";
 // });
 import {createApp} from "vue";
 export const app = createApp({
-    delimiters: ['[[', ']]'],
+
     components: {
         'like-icon': ComponentLiveIcon,
         'image-preview': ImagePreview
