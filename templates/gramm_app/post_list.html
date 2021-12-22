@@ -9,7 +9,7 @@
             {% for post in row %}
                 <div class="tile is-parent">
                     <div class="tile is-child box">
-                        {% include 'gramm_app/post_vue_content.html' %}
+                        {% include 'gramm_app/post_content.html' %}
                     </div>
                 </div>
             {% empty %}
@@ -47,8 +47,4 @@
         </ul>
     </nav>
     </div>
-    <script type="module">
-        import app from "{% static 'vue_js/like_icon_vue.js' %}";
-        app.mount('#like-icon-vue')
-    </script>
 {% endblock %}

@@ -13,6 +13,7 @@ multiavatar = "*"
 tzdata = "*"
 cloudinary = "*"
 django-environ = "*"
+django-webpack-loader = "*"
 
 [dev-packages]
 pytest = "*"

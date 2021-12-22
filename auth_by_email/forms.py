@@ -23,8 +23,8 @@ class UserActivationForm(UserCreationForm):
         model = DjGrammUser
         fields = ('first_name', 'last_name', 'email', 'password1', 'password2',  'bio', 'avatar')
 
-    class Media:
-        js = ('forms/file_field.js',)
+    # class Media:
+        # js = ('forms/file_field.js',)
 
 
 class UserUpdateForm(UserChangeForm):
@@ -38,8 +38,8 @@ class UserUpdateForm(UserChangeForm):
     class Meta(UserActivationForm.Meta):
         fields = ('first_name', 'last_name', 'email', 'bio', 'avatar')
 
-    class Media:
-        js = ('forms/file_field.js',)
+    # class Media:
+        # js = ('forms/file_field.js',)
 
 
 class LoginForm(AuthenticationForm):

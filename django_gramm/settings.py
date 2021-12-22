@@ -53,6 +53,7 @@ INSTALLED_APPS = [
     'auth_by_email.apps.AuthByEmailConfig',
     'gramm_app.apps.GrammappConfig',
     'django.forms',
+    'webpack_loader',
 
 ]
 
@@ -149,7 +150,7 @@ STATIC_URL = '/static/'
 STATICFILES_DIRS = [
     BASE_DIR / "static",
     BASE_DIR / "static/vue_js",
-    ("vue_js", BASE_DIR / "static/vue_js"),
+    BASE_DIR / "assets",
 ]
 
 MEDIA_ROOT = ""
@@ -172,6 +173,16 @@ DEFAULT_FROM_EMAIL = env('DEFAULT_FROM_EMAIL')
 
 
 CLOUDINARY_URL = env('CLOUDINARY_URL')
+
+
+WEBPACK_LOADER = {
+  'DEFAULT': {
+    'CACHE': not DEBUG,
+    'STATS_FILE': BASE_DIR / 'webpack-stats.json',
+    'POLL_INTERVAL': 0.1,
+    'IGNORE': [r'.+\.hot-update.js', r'.+\.map'],
+  }
+}
 
 
 from auth_by_email.auth_settings import *

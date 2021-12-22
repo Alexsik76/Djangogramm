@@ -11,8 +11,8 @@ class PostCreateForm(ModelForm):
         model = Post
         fields = ('title', 'image',)
 
-    class Media:
-        js = ('forms/file_field.js',)
+    # class Media:
+    #     js = ('forms/file_field.js',)
 
 
 class PostUpdateForm(ModelForm):
@@ -24,5 +24,5 @@ class PostUpdateForm(ModelForm):
         model = Post
         fields = ('title', 'image',)
 
-    class Media:
-        js = ('forms/file_field.js',)
+    # class Media:
+    #     js = ('forms/file_field.js',)

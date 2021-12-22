@@ -17,25 +17,25 @@
 {#        {% else %}#}
 {#            <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>#}
 {#        {% endif %}#}
-        <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
-        <script src="https://unpkg.com/vue@next"></script>
-{#        <script type="module" src="{% static 'main_vue.js' %}"></script>#}
+{#        <script src="https://unpkg.com/axios/dist/axios.min.js"></script>#}
+{#        <script src="https://unpkg.com/vue@next"></script>#}
+
 </head>
 <body>
     {% include 'navbar.html' %}
     <section class="section">
-        <div class="container">
+        <div id= "app" class="container">
              {% block content %}{% endblock %}
         </div>
     </section>
     <div class="bg"></div>
     <div class="bg bg2"></div>
     <div class="bg bg3"></div>
-{# <script>#}
-{#            const post_url = "{% url 'likes' post.id %}"#}
-{#            const post_id = {{post.id}}#}
-{#            const user_id = {{ user.id }}#}
-{#        </script>#}
-{#<script src="{% static 'vue_like_old.js' %}"></script>#}
+    {% load render_bundle from webpack_loader %}
+    {% render_bundle 'main' %}
+{#    <script type="module">#}
+{#        import {app} from '{% static "vue_js/main.js" %}';#}
+        {#app.mount('#app')#}
+{#    </script>#}
 </body>
 </html>

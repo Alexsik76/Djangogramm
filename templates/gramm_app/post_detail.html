@@ -9,7 +9,7 @@
                 <a class="delete" href="{% url 'index' %}"></a>
             </header>
             <div class="card-content">
-                {% include 'gramm_app/post_vue_content.html' %}
+                {% include 'gramm_app/post_content.html' %}
                 {% include 'block_messages.html' %}
             </div>
         <footer class="card-footer">
@@ -19,8 +19,4 @@
         </div>
     </div>
     </div>
-<script type="module">
-        import app from "{% static 'vue_js/like_icon_vue.js' %}";
-        app.mount('#like-icon-vue')
-    </script>
 {% endblock %}

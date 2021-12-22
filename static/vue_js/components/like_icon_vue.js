@@ -1,9 +1,4 @@
-// const createMyApp = () => Vue.createApp()
-const app = Vue.createApp({
-    delimiters: ['[[', ']]'],
-})
-
-export default app.component('like_icon_vue', {
+export default {
     props: ['post_id', 'post_likes_count', 'props_is_liked'],
     data() {
         return {
@@ -25,6 +20,13 @@ export default app.component('like_icon_vue', {
             this.is_liked = !this.is_liked
             this.count++
         },
+        getLikes() {
+            instance.get('/gramm_app/likes/1')
+                .then(response => {
+                        this.iconObject = response.data.likes
+                    }
+                )
+        }
 
     },
     mounted () {
@@ -41,4 +43,4 @@ export default app.component('like_icon_vue', {
         </span>
     </button>
     `
-})
+}
