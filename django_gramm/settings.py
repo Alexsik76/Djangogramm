@@ -176,7 +176,7 @@ CLOUDINARY_URL = env('CLOUDINARY_URL')
 
 WEBPACK_LOADER = {
   'DEFAULT': {
-    'CACHE': not DEBUG,
+    'CACHE': DEBUG,
     'STATS_FILE': BASE_DIR / 'webpack-stats.json',
     'POLL_INTERVAL': 0.1,
     'IGNORE': [r'.+\.hot-update.js', r'.+\.map'],

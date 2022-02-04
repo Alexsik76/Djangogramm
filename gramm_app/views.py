@@ -119,10 +119,9 @@ class LikeView2(PermissionRequiredMixin, View):
                              'likes': likes_count})
 
     def post(self, request, *args, **kwargs):
-        request_body = json.loads(request.body)
-        viewer = self.user_model.objects.get(pk=request_body.get('user_id'))
-        post = Post.objects.get(pk=request_body.get('post_id'))
-        is_liker = post.likes.filter(liker_id=request.user.id).exists()
+        viewer = self.user_model.objects.get(pk=request.user.pk)
+        post = Post.objects.get(pk=kwargs.get('pk'))
+        is_liker = post.is_liked(viewer)
         try:
             if not is_liker:
                 Like.like(viewer, post)

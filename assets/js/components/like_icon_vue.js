@@ -1,3 +1,10 @@
+const axios = require('axios');
+
+let http = axios.create({
+    xsrfCookieName: 'csrftoken',
+    xsrfHeaderName: "X-CSRFTOKEN",
+});
+
 export const ComponentLiveIcon = {
     props: ['payload'],
     data() {
@@ -23,9 +30,17 @@ export const ComponentLiveIcon = {
             this.count++
         },
         getLikes() {
-            instance.get(`/gramm_app/likes/${this.id}`)
+            http.get(`/gramm_app/likes/${this.id}`)
                 .then(response => {
                         this.iconObject = response.data.likes
+                    }
+                )
+        },
+        likeIt(){
+            http.post(`/gramm_app/likes/${this.id}`)
+                .then(response => {
+                    if(response.status ===200)
+                        this.count++
                     }
                 )
         }
@@ -36,7 +51,7 @@ export const ComponentLiveIcon = {
 
     },
     template: `
-    <button @click="invertIsLiked" class="button m-0">
+    <button @click="likeIt" class="button m-0">
          <span class="icon-text has-text-danger">
             <i :class="getIconClass"> &nbsp
             {{ getCount }}
