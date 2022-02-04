@@ -12,14 +12,6 @@
           integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
     <link rel="stylesheet" type="text/css" href="{% static 'background.css' %}">
 
-{#        {% if env_name == 'production' %}#}
-{#            <script src="https://cdn.jsdelivr.net/npm/vue"></script>#}
-{#        {% else %}#}
-{#            <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>#}
-{#        {% endif %}#}
-{#        <script src="https://unpkg.com/axios/dist/axios.min.js"></script>#}
-{#        <script src="https://unpkg.com/vue@next"></script>#}
-
 </head>
 <body>
     {% include 'navbar.html' %}
@@ -33,9 +25,5 @@
     <div class="bg bg3"></div>
     {% load render_bundle from webpack_loader %}
     {% render_bundle 'main' %}
-{#    <script type="module">#}
-{#        import {app} from '{% static "vue_js/main.js" %}';#}
-        {#app.mount('#app')#}
-{#    </script>#}
 </body>
 </html>

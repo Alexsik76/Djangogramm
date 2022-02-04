@@ -18,9 +18,8 @@ import cloudinary.uploader
 import cloudinary.api
 
 env = environ.Env(
-    DEBUG=(bool, False)
+    DEBUG=(bool, True)
 )
-
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -185,4 +184,4 @@ WEBPACK_LOADER = {
 
 
 from auth_by_email.auth_settings import *
-django_heroku.settings(locals())
+# django_heroku.settings(locals())

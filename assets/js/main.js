@@ -4,7 +4,7 @@ import ImagePreview from "./components/image_preview";
 
 
 import {createApp} from "vue";
-export const app = createApp({
+createApp({
 
     components: {
         'like-icon': ComponentLiveIcon,

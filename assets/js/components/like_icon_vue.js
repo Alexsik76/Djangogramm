@@ -8,6 +8,7 @@ let http = axios.create({
 export const ComponentLiveIcon = {
     props: ['payload'],
     data() {
+        console.log(this.payload)
         return {
                 is_liked: (this.payload.is_liked),
                 count: this.payload.likes_count,
@@ -19,9 +20,9 @@ export const ComponentLiveIcon = {
         getIconClass() {
             return this.is_liked ? 'fas fa-heart' : 'far fa-heart'
         },
-        getCount(){
-            return this.count
-        },
+        // getCount(){
+        //     return this.count
+        // },
 
     },
     methods: {
@@ -37,24 +38,26 @@ export const ComponentLiveIcon = {
                 )
         },
         likeIt(){
+            console.log("like", this.id)
             http.post(`/gramm_app/likes/${this.id}`)
                 .then(response => {
                     if(response.status ===200)
                         this.count++
+                        console.log("like", this.id)
                     }
                 )
         }
 
     },
-    mounted () {
-        console.log("mounted new " + this.id)
+    mounted() {
+        console.log("mounted newest " + this.id)
 
     },
     template: `
     <button @click="likeIt" class="button m-0">
          <span class="icon-text has-text-danger">
             <i :class="getIconClass"> &nbsp
-            {{ getCount }}
+            {{ count }}
             </i>
         </span>
     </button>
