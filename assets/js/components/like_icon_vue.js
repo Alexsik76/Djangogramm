@@ -1,9 +1,11 @@
 export const ComponentLiveIcon = {
-    props: ['post_id', 'post_likes_count', 'props_is_liked'],
+    props: ['payload'],
     data() {
         return {
-                is_liked: false,
-                count: null,
+                is_liked: (this.payload.is_liked),
+                count: this.payload.likes_count,
+                id: this.payload.post_id,
+                iconObject: null
             }
     },
     computed: {
@@ -21,7 +23,7 @@ export const ComponentLiveIcon = {
             this.count++
         },
         getLikes() {
-            instance.get('/gramm_app/likes/1')
+            instance.get(`/gramm_app/likes/${this.id}`)
                 .then(response => {
                         this.iconObject = response.data.likes
                     }
@@ -30,9 +32,8 @@ export const ComponentLiveIcon = {
 
     },
     mounted () {
-        console.log("mounted " + this.post_id)
-        this.count = this.post_likes_count
-        this.is_liked = this.props_is_liked.toLowerCase() === "true"
+        console.log("mounted new " + this.id)
+
     },
     template: `
     <button @click="invertIsLiked" class="button m-0">

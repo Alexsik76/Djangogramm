@@ -149,7 +149,6 @@ STATIC_ROOT = ''
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [
     BASE_DIR / "static",
-    BASE_DIR / "static/vue_js",
     BASE_DIR / "assets",
 ]
 

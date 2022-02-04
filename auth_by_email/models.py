@@ -6,6 +6,7 @@ from django.utils.translation import gettext_lazy as _
 import logging
 from cloudinary.models import CloudinaryField
 import cloudinary.api
+
 # Create your models here.
 
 logger = logging.getLogger(__name__)
@@ -52,11 +53,14 @@ class DjGrammUserManager(BaseUserManager):
 
 
 class DjGrammUser(AbstractUser):
-    BIO_CHOICES = [(None, _('select gender')), (_('Mr'), _('mister')), (_('Mrs'), _('misses'))]
+    BIO_CHOICES = [(None, _('select gender')), (_('Mr'), _('mister')),
+                   (_('Mrs'), _('misses'))]
     username = None
     email = models.EmailField(_('email address'), blank=False, unique=True)
-    bio = models.CharField(_('bio'), max_length=3, blank=False, choices=BIO_CHOICES)
-    avatar = CloudinaryField('image', blank=False, folder='django_gramm/avatars')
+    bio = models.CharField(_('bio'), max_length=3, blank=False,
+                           choices=BIO_CHOICES)
+    avatar = CloudinaryField('image', blank=False,
+                             folder='django_gramm/avatars')
     objects = DjGrammUserManager()
 
     USERNAME_FIELD = 'email'
@@ -78,7 +82,8 @@ class DjGrammUser(AbstractUser):
                               'delete_post',
                               'change_post',
                               'add_post']
-        required_perms = [Permission.objects.get(codename=perms_codename) for perms_codename in all_perms_codename]
+        required_perms = [Permission.objects.get(codename=perms_codename) for
+                          perms_codename in all_perms_codename]
         self.user_permissions.set(required_perms)
 
 
@@ -89,12 +94,15 @@ class Following(models.Model):
         Meta.constraints forbids tracking a user more than once.
         Modified method save forbids tracking oneself.
     """
-    follower_user = models.ForeignKey(DjGrammUser, related_name="following", on_delete=models.CASCADE)
-    following_user = models.ForeignKey(DjGrammUser, related_name="followers", on_delete=models.CASCADE)
+    follower_user = models.ForeignKey(DjGrammUser, related_name="following",
+                                      on_delete=models.CASCADE)
+    following_user = models.ForeignKey(DjGrammUser, related_name="followers",
+                                       on_delete=models.CASCADE)
 
     class Meta:
         constraints = [
-            models.UniqueConstraint(fields=['follower_user', 'following_user'], name='unique_follow'),
+            models.UniqueConstraint(fields=['follower_user', 'following_user'],
+                                    name='unique_follow'),
         ]
 
     def __str__(self):
@@ -107,7 +115,8 @@ class Following(models.Model):
 
     @classmethod
     def follow(cls, following_user, follower_user):
-        cls.objects.create(following_user=following_user, follower_user=follower_user)
+        cls.objects.create(following_user=following_user,
+                           follower_user=follower_user)
 
     def unfollow(self):
         self.delete()

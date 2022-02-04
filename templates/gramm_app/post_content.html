@@ -32,9 +32,10 @@
             </figure>
         </div>
         <div class="is-pulled-right m-0 p-0">
-            <like-icon post_id="{{ post.id }}"
-                       post_likes_count="{{ post.likes.count }}"
-                       props_is_liked={{ post|is_liked:user }}>
+            <like-icon :payload='{
+                        "post_id":{{ post.id }},
+                        "likes_count":{{ post.likes.count }},
+                        "is_liked":{{ post|is_liked:user }} }'>
             </like-icon>
         </div>
     </div>
