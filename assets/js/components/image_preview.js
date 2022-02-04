@@ -5,9 +5,12 @@ export default {
     ['label', 'name', 'value'],
 
   data() {
+    console.log(this.value)
     return {
       url: "https://via.placeholder.com/150",
-      file_name: 'File not changed'
+      file_name: this.name,
+      label_text: this.label,
+
     }
   },
   methods: {
@@ -26,7 +29,7 @@ export default {
                            accept="image/*">
                     <span class="file-cta">
                         <span class="file-icon"><i class="fas fa-upload"></i></span>
-                        <span class="file-label">[[label]]</span>
+                        <span class="file-label">[[label_text]]</span>
                     </span>
                     <span class="file-name">[[file_name]]</span>
                 </label>

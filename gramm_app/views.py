@@ -5,13 +5,13 @@ from django.shortcuts import render, redirect
 from django.db import IntegrityError
 from django.core.exceptions import ValidationError
 from django.urls import reverse
-from django.http import JsonResponse, HttpResponse
-from django.views.generic import CreateView, UpdateView, DetailView, DeleteView, ListView, View
+from django.http import JsonResponse, HttpResponseRedirect
+from django.views.generic import CreateView, UpdateView, DetailView, \
+    DeleteView, ListView, View
 from django.contrib.auth.mixins import PermissionRequiredMixin
 from gramm_app.models import Post, Like
 from gramm_app.forms import PostCreateForm, PostUpdateForm
 from asgiref.sync import sync_to_async
-import json
 
 
 # Create your views here.
@@ -52,14 +52,27 @@ class PostUpdateView(PermissionRequiredMixin, UpdateView):
     model = Post
     form_class = PostUpdateForm
     permission_required = 'gramm_app.change_post'
+    permission_denied_message = 'You are have not permissions'
 
     def has_permission(self):
         perms = self.get_permission_required()
-        objects_author = self.model.objects.get(pk=self.kwargs.get('pk')).author
-        return self.request.user.has_perms(perms) and (objects_author == self.request.user)
+        objects_author = self.model.objects \
+            .get(pk=self.kwargs.get('pk')) \
+            .author
+        return self.request.user.has_perms(perms) and (
+                    objects_author == self.request.user)
 
     def get_success_url(self):
-        return reverse('post-detail', kwargs={'pk': self.object.pk})
+        return reverse('post-detail', kwargs={'pk': self.object.id})
+
+    def handle_no_permission(self):
+        messages.warning(self.request,
+                         'You are have not permissions to do this.')
+
+        return HttpResponseRedirect(reverse('post-detail',
+                                            kwargs={
+                                                'pk': self.kwargs.get('pk')
+                                            }))
 
 
 class PostDeleteView(PermissionRequiredMixin, DeleteView):
@@ -88,39 +101,9 @@ class LikeView(PermissionRequiredMixin, View):
     def user_model(self):
         return get_user_model()
 
-    def get(self, request, *args, **kwargs):
-        pk = self.kwargs.get('pk')
-        post = self.post_model.objects.get(pk=pk)
-        viewer = self.user_model.objects.get(pk=request.user.id)
-        try:
-            Like.like(viewer, post)
-            messages.success(request, f'You are like the {post.title}.')
-        except IntegrityError:
-            messages.warning(request, f'You are already like the {post.title}.')
-        except ValidationError as e:
-            messages.warning(request, e.message)
-        return redirect(request.META['HTTP_REFERER'])
-
-
-class LikeView2(PermissionRequiredMixin, View):
-    permission_required = 'gramm_app.view_post'
-    post_model = Post
-
-    @functools.cached_property
-    def user_model(self):
-        return get_user_model()
-
-    def get(self, request, *args, **kwargs):
-        pk = self.kwargs.get('pk')
-        post = self.post_model.objects.get(pk=pk)
-        is_liker = post.likes.filter(liker_id=request.user.id).exists()
-        likes_count = post.likes.count()
-        return JsonResponse({'liker': is_liker,
-                             'likes': likes_count})
-
     def post(self, request, *args, **kwargs):
         viewer = self.user_model.objects.get(pk=request.user.pk)
-        post = Post.objects.get(pk=kwargs.get('pk'))
+        post = Post.objects.get(id=kwargs.get('pk'))
         is_liker = post.is_liked(viewer)
         try:
             if not is_liker:
@@ -131,10 +114,11 @@ class LikeView2(PermissionRequiredMixin, View):
                 like.delete()
                 messages.warning(request, f'You are unlike the {post.title}.')
         except IntegrityError:
-            messages.warning(request, f'You are already like the {post.title}.')
+            messages.warning(request,
+                             f'You are already like the {post.title}.')
         except ValidationError as e:
             messages.warning(request, e.message)
-        return HttpResponse(status=200)
+        return JsonResponse({}, status=200)
 
 
 @sync_to_async
