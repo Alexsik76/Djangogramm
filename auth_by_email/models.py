@@ -60,7 +60,8 @@ class DjGrammUser(AbstractUser):
     bio = models.CharField(_('bio'), max_length=3, blank=False,
                            choices=BIO_CHOICES)
     avatar = CloudinaryField('image', blank=False,
-                             folder='django_gramm/avatars')
+                             folder='django_gramm/avatars',
+                             use_filename=True)
     objects = DjGrammUserManager()
 
     USERNAME_FIELD = 'email'

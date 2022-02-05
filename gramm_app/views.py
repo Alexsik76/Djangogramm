@@ -2,8 +2,6 @@ import functools
 from django.contrib import messages
 from django.contrib.auth import get_user_model
 from django.shortcuts import render, redirect
-from django.db import IntegrityError
-from django.core.exceptions import ValidationError
 from django.urls import reverse
 from django.http import JsonResponse, HttpResponseRedirect
 from django.views.generic import CreateView, UpdateView, DetailView, \
@@ -11,7 +9,6 @@ from django.views.generic import CreateView, UpdateView, DetailView, \
 from django.contrib.auth.mixins import PermissionRequiredMixin
 from gramm_app.models import Post, Like
 from gramm_app.forms import PostCreateForm, PostUpdateForm
-from asgiref.sync import sync_to_async
 
 
 # Create your views here.
@@ -86,6 +83,7 @@ class PostDeleteView(PermissionRequiredMixin, DeleteView):
 class PostListView(PermissionRequiredMixin, ListView):
     permission_required = 'gramm_app.view_post'
     model = Post
+    queryset = model.objects.all().order_by('id')
     paginate_by = 9
 
     def has_permission(self):
@@ -101,30 +99,18 @@ class LikeView(PermissionRequiredMixin, View):
     def user_model(self):
         return get_user_model()
 
-    def post(self, request, *args, **kwargs):
-        viewer = self.user_model.objects.get(pk=request.user.pk)
-        post = Post.objects.get(id=kwargs.get('pk'))
+    def get(self, request, pk):
+        post = Post.objects.get(id=pk)
+        viewer = self.user_model.objects.get(id=request.user.pk)
         is_liker = post.is_liked(viewer)
-        try:
-            if not is_liker:
-                Like.like(viewer, post)
-                messages.success(request, f'You are like the {post.title}.')
-            else:
-                like = Like.objects.filter(liker_id=request.user.id).first()
-                like.delete()
-                messages.warning(request, f'You are unlike the {post.title}.')
-        except IntegrityError:
-            messages.warning(request,
-                             f'You are already like the {post.title}.')
-        except ValidationError as e:
-            messages.warning(request, e.message)
-        return JsonResponse({}, status=200)
+        if not is_liker:
+            Like.like(viewer, post)
+        else:
+            post.likes.get(liker_id=viewer.id).delete()
+        return JsonResponse({
+            "likes_count": post.likes.count(),
+            "is_liker": post.is_liked(viewer)},
+            status=200)
 
 
-@sync_to_async
-def is_was_liker(request, pk):
-    post = Post.objects.get(pk=pk)
-    is_liker = post.likes.filter(liker_id=request.user.id).exists()
-    likes_count = post.likes.count()
-    return JsonResponse({'liker': is_liker,
-                         'likes': likes_count})
+

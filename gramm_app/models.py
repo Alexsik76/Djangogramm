@@ -24,7 +24,9 @@ class PostManager(models.Manager):
 
 class Post(models.Model):
     title = models.CharField(_('Title'), max_length=256, blank=False)
-    image = CloudinaryField('image', folder='django_gramm/pasts_images')
+    image = CloudinaryField('image',
+                            folder='django_gramm/pasts_images',
+                            use_filename=True)
     author = models.ForeignKey(DjGrammUser, on_delete=models.CASCADE)
     objects = PostManager()
 
@@ -43,14 +45,6 @@ class Like(models.Model):
     liker = models.ForeignKey(DjGrammUser, on_delete=models.CASCADE, related_name='likes')
     liked = models.ForeignKey(Post, on_delete=models.CASCADE, related_name='likes')
 
-    class Meta:
-        constraints = [
-            models.UniqueConstraint(fields=['liked', 'liker'], name='unique_like'),
-        ]
-
     @classmethod
     def like(cls, liker, liked):
         cls.objects.create(liker=liker, liked=liked)
-
-    def unlike(self):
-        self.delete()

@@ -100,7 +100,6 @@ class DjUserDetailView(LoginRequiredMixin, DetailView):
 
 
 class DjUserUpdateView(LoginRequiredMixin, UpdateView):
-    object: object
     model = DjGrammUser
     template_name = 'registration/user_update.html'
     form_class = UserUpdateForm
