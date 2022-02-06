@@ -2,13 +2,12 @@ export default {
   name: 'ImagePreview',
   delimiters: ['[[', ']]'],
   props:
-    ['name', 'value'],
+    ['old_file_name', 'value', 'field_name'],
 
   data() {
-    console.log(this.value, this.name)
     return {
       url: this.value || "https://via.placeholder.com/150",
-      file_name: this.name,
+      file_name: this.old_file_name,
     }
   },
   methods: {
@@ -22,7 +21,7 @@ export default {
   <div class="column is-three-fifths">
             <div id="with_filename" class="file has-name is-boxed">
                 <label class="file-label">
-                    <input id="imgInput" class="file-input" type="file" name="image" @change="onFileChange"
+                    <input id="imgInput" class="file-input" type="file" :name=field_name @change="onFileChange"
                            accept="image/*">
                     <span class="file-cta">
                         <span class="file-icon"><i class="fas fa-upload"></i></span>

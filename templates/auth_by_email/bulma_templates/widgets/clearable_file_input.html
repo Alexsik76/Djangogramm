@@ -4,6 +4,7 @@
     <p>file input</p>
     <image-preview
             value= "{{ widget.value.url }}"
-            name= "{{ widget.value|get_file_name }}">
+            old_file_name= "{{ widget.value|get_file_name }}"
+            field_name= "{{ widget.name }}">
     </image-preview>
 </div>

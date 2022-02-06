@@ -21,7 +21,7 @@ class UserActivationForm(UserCreationForm):
 
     class Meta:
         model = DjGrammUser
-        fields = ('first_name', 'last_name', 'email', 'password1', 'password2',  'bio', 'avatar')
+        fields = ('first_name', 'last_name', 'email', 'password1', 'password2', 'bio', 'avatar')
 
 
 class UserUpdateForm(UserChangeForm):
