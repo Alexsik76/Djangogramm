@@ -52,9 +52,6 @@
             </div>
             <div class="box">
                 <div class="columns">
-                    <div class="column is-one-fifth">
-                        <a class="button is-success" href="{% url 'user_update' %}">Edit profile</a>
-                    </div>
                     {% if user != dj_user %}
                         <div class="column is-5 is-offset-5">
                             <div class="buttons">
@@ -64,6 +61,10 @@
                                    href="{% url 'unfollow' dj_user.id %}">Unfollow</a>
                             </div>
                         </div>
+                    {% else %}
+                        <div class="column is-one-fifth">
+                        <a class="button is-success" href="{% url 'user_update' %}">Edit profile</a>
+                    </div>
                     {% endif %}
                 </div>
             </div>

@@ -6,7 +6,6 @@
             <h3 class="title">Activation form</h3>
             {% csrf_token %}
             {% form_bulma %}
-            {{ form.media }}
             <div class="field">
                 <p class="control">
                     {% button_bulma name='activate' %}
