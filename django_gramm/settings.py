@@ -46,13 +46,13 @@ INSTALLED_APPS = [
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
-    # 'django.contrib.staticfiles',
-    'django_gramm.static_config.MyStaticFilesConfig',
+    'django.contrib.staticfiles',
+    # 'django_gramm.static_config.MyStaticFilesConfig',
     'cloudinary',
+    'corsheaders',
     'auth_by_email.apps.AuthByEmailConfig',
     'gramm_app.apps.GrammappConfig',
     'django.forms',
-    'webpack_loader',
 
 ]
 
@@ -64,6 +64,8 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
+    'django.middleware.common.CommonMiddleware',
 ]
 
 ROOT_URLCONF = 'django_gramm.urls'
@@ -148,7 +150,7 @@ STATIC_ROOT = ''
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [
     BASE_DIR / "static",
-    BASE_DIR / "assets",
+    BASE_DIR / "frontend"
 ]
 
 MEDIA_ROOT = ""
@@ -172,16 +174,9 @@ DEFAULT_FROM_EMAIL = env('DEFAULT_FROM_EMAIL')
 
 CLOUDINARY_URL = env('CLOUDINARY_URL')
 
-
-WEBPACK_LOADER = {
-  'DEFAULT': {
-    'CACHE': DEBUG,
-    'STATS_FILE': BASE_DIR / 'webpack-stats.json',
-    'POLL_INTERVAL': 0.1,
-    'IGNORE': [r'.+\.hot-update.js', r'.+\.map'],
-  }
-}
-
+CORS_ORIGIN_WHITELIST = (
+    'localhost:8080',
+)
 
 from auth_by_email.auth_settings import *
 # django_heroku.settings(locals())

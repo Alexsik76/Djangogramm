@@ -13,7 +13,7 @@ multiavatar = "*"
 tzdata = "*"
 cloudinary = "*"
 django-environ = "*"
-django-webpack-loader = "*"
+django-cors-headers = "*"
 
 [dev-packages]
 pytest = "*"

@@ -2,9 +2,9 @@
 {% load bulma_filters %}
 <div class="columns  is-vcentered">
     <p>file input</p>
-    <image-preview
+    <ImagePreview
             value= "{{ widget.value.url }}"
             old_file_name= "{{ widget.value|get_file_name }}"
             field_name= "{{ widget.name }}">
-    </image-preview>
+    </ImagePreview>
 </div>

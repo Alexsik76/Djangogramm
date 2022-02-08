@@ -1,5 +1,5 @@
 
-import {ComponentLiveIcon} from './components/like_icon_vue'
+import {ComponentLiveIcon} from './components/like_icon_vue.vue'
 import ImagePreview from "./components/image_preview";
 
 
