@@ -4,10 +4,9 @@
 {% block content %}
     <div class="columns is-centered">
         <div class="card column is-half">
-            <header class="card-header">
-                <h3 class="card-header-title is-size-2 has-text-grey-light">User detail</h3>
-                <a class="delete" href="{% url 'index' %}"></a>
-            </header>
+            <card-header close-url="{% url 'index' %}"
+                         title="User detail">
+            </card-header>
             <div class="card-content">
                 <div class="content">
                     <div class="columns">

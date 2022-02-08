@@ -8,7 +8,7 @@
                         <span class="file-icon"><i class="fas fa-upload"></i></span>
                         <span class="file-label">Choose a file...</span>
                     </span>
-                    <span class="file-name">[[file_name]]</span>
+                    <span class="file-name">{{file_name}}</span>
                 </label>
             </div>
         </div>
@@ -19,9 +19,8 @@
     </div>
   </template>
 <script>
-export default {
-  name: 'ImagePreview',
-  delimiters: ['[[', ']]'],
+
+const ImagePreview = {
   props:
       ['old_file_name', 'value', 'field_name'],
 
@@ -39,5 +38,6 @@ export default {
     }
   }
 }
+export default ImagePreview
 </script>
 

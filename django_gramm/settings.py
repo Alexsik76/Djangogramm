@@ -53,6 +53,7 @@ INSTALLED_APPS = [
     'auth_by_email.apps.AuthByEmailConfig',
     'gramm_app.apps.GrammappConfig',
     'django.forms',
+    'webpack_loader',
 
 ]
 
@@ -70,13 +71,15 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = 'django_gramm.urls'
 
+TEMPLATES_DIR = BASE_DIR / 'templates'
+FRONTEND_DIR = BASE_DIR / 'frontend'
+
 FORM_RENDERER = 'django.forms.renderers.TemplatesSetting'
 
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [BASE_DIR / 'templates',
-                 ],
+        'DIRS': [TEMPLATES_DIR,],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -146,12 +149,13 @@ DISABLE_COLLECTSTATIC = 1
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
 
-STATIC_ROOT = ''
+# STATIC_ROOT = BASE_DIR / "static"
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [
+    BASE_DIR / "frontend",
     BASE_DIR / "static",
-    BASE_DIR / "frontend"
 ]
+
 
 MEDIA_ROOT = ""
 MEDIA_URL = ""
@@ -175,8 +179,18 @@ DEFAULT_FROM_EMAIL = env('DEFAULT_FROM_EMAIL')
 CLOUDINARY_URL = env('CLOUDINARY_URL')
 
 CORS_ORIGIN_WHITELIST = (
-    'localhost:8080',
+    'http://localhost:8080',
 )
+
+WEBPACK_LOADER = {
+  'DEFAULT': {
+        'CACHE': not DEBUG,
+        'POLL_INTERVAL': 0.1,
+        'IGNORE': [r'.+\.hot-update.js', r'.+\.map'],
+        'BUNDLE_DIR_NAME': '/bundles/',
+        'STATS_FILE': FRONTEND_DIR / 'webpack-stats.json'
+  }
+}
 
 from auth_by_email.auth_settings import *
 # django_heroku.settings(locals())

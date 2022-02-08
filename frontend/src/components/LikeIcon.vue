@@ -11,8 +11,7 @@
 <script>
 const axios = require('axios');
 
-export default {
-  name: 'LikeIcon',
+const LikeIcon = {
   props: ['payload'],
   data() {
     return {
@@ -40,4 +39,5 @@ export default {
     },
   },
 }
+export default LikeIcon
 </script>
