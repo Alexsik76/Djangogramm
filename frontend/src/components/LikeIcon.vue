@@ -10,8 +10,8 @@
 
 <script>
 const axios = require('axios');
-
-const LikeIcon = {
+export default {
+  name: 'LikeIcon',
   props: ['payload'],
   data() {
     return {
@@ -22,7 +22,7 @@ const LikeIcon = {
   },
   computed: {
     getIconClass() {
-      return this.is_liked ? 'fas fa-heart' : 'far fa-heart'
+    return this.is_liked ? 'fas fa-heart' : 'far fa-heart'
     },
   },
   methods: {
@@ -39,5 +39,5 @@ const LikeIcon = {
     },
   },
 }
-export default LikeIcon
+
 </script>

@@ -7,7 +7,9 @@
             <card-header close-url="{% url 'index' %}"
                          title="User detail">
             </card-header>
-            <div class="card-content">
+            <div class="card-content" id="vue-user">
+            <counter :count={{ dj_user.followers.count }}
+                        :app_counter='app_counter'>
                 <div class="content">
                     <div class="columns">
                         <div class="column is-two-fifths">
@@ -21,6 +23,7 @@
                             <div class="tags has-addons">
                                 <span class="tag is-dark">followers</span>
                                 <span class="tag is-success">{{ dj_user.followers.count }}</span>
+                                <span class="tag is-warning">[[app_count]]</span>
                             </div>
                         </div>
                         <div class="column">
@@ -48,7 +51,9 @@
                         </div>
                     </div>
                 </div>
+            </counter>
             </div>
+
             <div class="box">
                 <div class="columns">
                     {% if user != dj_user %}
@@ -71,6 +76,7 @@
                 <div class="box">
                     <div class="columns">
                         <div class="column is-half">
+                        <p id="vue-count2"></p>
                             <table class="table">
                                 <thead>
                                 <tr>
@@ -113,4 +119,5 @@
             </div>
         </div>
     </div>
+
 {% endblock %}
