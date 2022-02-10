@@ -23,7 +23,9 @@ export default {
     }
   },
   methods:{
-    get_count(count) {this.app_count = count}
+    get_count(count) {
+      this.app_count = count
+    }
 
   },
 
