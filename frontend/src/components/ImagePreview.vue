@@ -1,4 +1,5 @@
 <template>
+  <div>
   <div class="column is-three-fifths">
             <div id="with_filename" class="file has-name is-boxed">
                 <label class="file-label">
@@ -11,12 +12,13 @@
                     <span class="file-name">{{file_name}}</span>
                 </label>
             </div>
-        </div>
-    <div class="box" style="padding: 0.5rem">
-        <figure class="image" style="width: 128px">
-          <img id="imgPrev" :src="url" alt="Loaded image"/>
-        </figure>
-    </div>
+  </div>
+  <div class="box" style="padding: 0.5rem">
+      <figure class="image" style="width: 128px">
+        <img id="imgPrev" :src="url" alt="Loaded image"/>
+      </figure>
+  </div>
+  </div>
   </template>
 <script>
 

@@ -1,11 +1,13 @@
 <template>
-  <slot></slot>
+  <div>
+    <slot></slot>
+  </div>
 </template>
 <script>
 export default {
   name: "Counter",
 
-  props:{
+  props: {
     count: Number,
     app_counter: Function,
   },
@@ -13,7 +15,7 @@ export default {
 
   mounted() {
 
-  this.app_counter(this.count)
+    this.app_counter(this.count)
   }
 }
 </script>
