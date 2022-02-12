@@ -141,3 +141,7 @@ def by_rows(page):
 def is_liked(post, user):
     return json.dumps(post.is_liked(user))
 
+
+@register.filter
+def is_followed(target_user, user):
+    return json.dumps(target_user.is_followed(user))

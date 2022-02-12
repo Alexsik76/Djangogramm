@@ -16,13 +16,13 @@ export default {
   data() {
     return {
       id: this.payload.post_id,
-      is_liked: (this.payload.is_liked),
+      is_liked: this.payload.is_liked,
       count: this.payload.likes_count,
     }
   },
   computed: {
     getIconClass() {
-    return this.is_liked ? 'fas fa-heart' : 'far fa-heart'
+    return this.is_liked ? 'fas fa-heart' : 'far fa-heart';
     },
   },
   methods: {
@@ -31,13 +31,12 @@ export default {
       axios.get(`/gramm_app/likes/${this.id}`)
           .then(response => {
                 if (response.status === 200) {
-                  this.is_liked = response.data.is_liker
-                  this.count = response.data.likes_count
+                  this.is_liked = response.data.is_liker;
+                  this.count = response.data.likes_count;
                 }
               }
           )
     },
   },
 }
-
 </script>

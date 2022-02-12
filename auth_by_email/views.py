@@ -6,7 +6,7 @@ from django.contrib.sites.shortcuts import get_current_site
 from django.core.exceptions import ValidationError
 from django.core.mail import EmailMessage
 from django.db import IntegrityError
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render, redirect
 from django.template.loader import render_to_string
 from django.urls import reverse
@@ -37,7 +37,7 @@ class Signup(View):
             user.set_unusable_password()
             user.username = user.email
             user.save()
-            # Send an email to the user with the token:
+            # Sending an email to the user with the token:
             mail_subject = 'Activate your account.'
             message = render_to_string('registration/activation_email.html', {
                 'user': user,
@@ -121,32 +121,61 @@ class DjUserUpdateView(LoginRequiredMixin, UpdateView):
             return self.form_invalid(form)
 
 
-class FollowView(LoginRequiredMixin, View):
+# class FollowView(LoginRequiredMixin, View):
+#     object = DjGrammUser
+#
+#     def get(self, request, pk, *args, **kwargs):
+#         author = self.object.objects.get(pk=pk)
+#         viewer = self.object.objects.get(pk=request.user.id)
+#         try:
+#             Following.follow(author, viewer)
+#             messages.success(request, f'You are following the {author.get_full_name()}.')
+#         except IntegrityError:
+#             messages.warning(request, f'You are already follow the {author.get_full_name()}.')
+#         except ValidationError as e:
+#             messages.warning(request, e.message)
+#         return JsonResponse({
+#             "count": author.followers.count(),
+#             "is_followed": author.is_followed(viewer)},
+#             status=200)
+
+
+class FollowingView(LoginRequiredMixin, View):
     object = DjGrammUser
 
     def get(self, request, pk, *args, **kwargs):
         author = self.object.objects.get(pk=pk)
         viewer = self.object.objects.get(pk=request.user.id)
-        try:
-            Following.follow(author, viewer)
-            messages.success(request, f'You are following the {author.get_full_name()}.')
-        except IntegrityError:
-            messages.warning(request, f'You are already follow the {author.get_full_name()}.')
-        except ValidationError as e:
-            messages.warning(request, e.message)
-        return redirect(request.META['HTTP_REFERER'])
+        if author.is_followed(viewer):
+            try:
+                follower = author.followers.get(follower_user=viewer)
+                Following.unfollow(follower)
+            except (IntegrityError, ValidationError) as e:
+                messages.warning(request, e.message)
+        else:
+            try:
+                Following.follow(author, viewer)
+            except (IntegrityError, ValidationError) as e:
+                messages.warning(request, e.message)
+        return JsonResponse({
+            "count": author.followers.count(),
+            "is_followed": author.is_followed(viewer)},
+            status=200)
 
-
-class UnfollowView(LoginRequiredMixin, View):
-    object = DjGrammUser
-
-    def get(self, request, pk, *args, **kwargs):
-        author = self.object.objects.get(pk=pk)
-        viewer = self.object.objects.get(pk=request.user.id)
-        try:
-            follower = author.followers.get(follower_user=viewer)
-            Following.unfollow(follower)
-            messages.success(request, f'You are unfollow the {author.get_full_name()}.')
-        except Following.DoesNotExist:
-            messages.warning(request, f'You are not follow the {author.get_full_name()}.')
-        return redirect(request.META['HTTP_REFERER'])
+#
+# class UnfollowView(LoginRequiredMixin, View):
+#     object = DjGrammUser
+#
+#     def get(self, request, pk, *args, **kwargs):
+#         author = self.object.objects.get(pk=pk)
+#         viewer = self.object.objects.get(pk=request.user.id)
+#         try:
+#             follower = author.followers.get(follower_user=viewer)
+#             Following.unfollow(follower)
+#             messages.success(request, f'You are unfollow the {author.get_full_name()}.')
+#         except Following.DoesNotExist:
+#             messages.warning(request, f'You are not follow the {author.get_full_name()}.')
+#         return JsonResponse({
+#             "count": author.followers.count(),
+#             "is_followed": author.is_followed(viewer)},
+#             status=200)

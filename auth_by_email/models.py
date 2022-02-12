@@ -87,6 +87,9 @@ class DjGrammUser(AbstractUser):
                           perms_codename in all_perms_codename]
         self.user_permissions.set(required_perms)
 
+    def is_followed(self, user):
+        return self.followers.filter(follower_user_id=user.id).exists()
+
 
 class Following(models.Model):
     """
