@@ -30,7 +30,6 @@ export default {
     },
   },
   methods: {
-
     postLike() {
       axios.get(`/gramm_app/likes/${this.id}`)
           .then(response => {

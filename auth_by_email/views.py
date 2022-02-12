@@ -127,18 +127,18 @@ class FollowingView(LoginRequiredMixin, View):
     def get(self, request, pk, *args, **kwargs):
         author = self.object.objects.get(pk=pk)
         viewer = self.object.objects.get(pk=request.user.id)
-        if author.is_followed(viewer):
-            try:
-                follower = author.followers.get(follower_user=viewer)
-                Following.unfollow(follower)
-            except (IntegrityError, ValidationError) as e:
-                messages.warning(request, e.message)
-        else:
-            try:
-                Following.follow(author, viewer)
-            except (IntegrityError, ValidationError) as e:
-                messages.warning(request, e.message)
+        try:
+            Following.follow(author, viewer)
+        except IntegrityError:
+            follower = author.followers.get(follower_user=viewer)
+            Following.unfollow(follower)
+        except ValidationError as e:
+            return JsonResponse({'error_message': e.message}, status=403)
         return JsonResponse({
             "count": author.followers.count(),
             "is_followed": author.is_followed(viewer)},
             status=200)
+
+    @staticmethod
+    def handle_error(error):
+        return JsonResponse({'error_message': error.message}, status=403)

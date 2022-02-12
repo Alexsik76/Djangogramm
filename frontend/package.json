@@ -11,6 +11,7 @@
     "@vue/cli": "^4.5.15",
     "axios": "^0.25.0",
     "core-js": "^3.6.5",
+    "gsap": "^3.9.1",
     "vue": "^3.0.0"
   },
   "devDependencies": {
