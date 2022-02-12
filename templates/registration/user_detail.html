@@ -21,7 +21,7 @@
                             </figure>
                             <follow-button target_user_id="{{ dj_user.id }}"
                                            followers_count="{{ dj_user.followers.count }}"
-                                           is_followed="{{ dj_user|is_followed:user }}"
+                                           :is_followed="{{ dj_user|is_followed:user }}"
                             >
                             </follow-button>
 
@@ -47,13 +47,12 @@
                                 </tr>
                                 </tbody>
                             </table>
-{#                            {% include 'block_messages.html' %}#}
                         </div>
                     </div>
                 </div>
             </div>
-            <div class="box">
                     {% if user == dj_user %}
+            <div class="box">
                 <div class="columns">
                         <div class="column is-one-fifth">
                             <a class="button is-success" href="{% url 'user_update' %}">Edit profile</a>

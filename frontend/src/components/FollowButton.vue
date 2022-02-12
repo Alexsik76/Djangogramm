@@ -15,10 +15,9 @@ export default {
   props: {
     target_user_id: String,
     followers_count: String,
-    is_followed: String,
+    is_followed: Boolean,
   },
   data() {
-    console.log(this.is_followed)
     return {
       count: this.followers_count,
       followed: this.is_followed
@@ -26,7 +25,6 @@ export default {
   },
   computed: {
     getTagClass() {
-      console.log(this.followed)
       return this.followed ? "is-success" : "is-info"
     }
   },
@@ -39,8 +37,6 @@ export default {
           })
     },
   }
-
-
 }
 </script>
 

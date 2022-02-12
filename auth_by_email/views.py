@@ -111,7 +111,7 @@ class DjUserUpdateView(LoginRequiredMixin, UpdateView):
         return reverse('user_detail',  kwargs={'pk': self.request.user.id})
 
     def post(self, request, *args, **kwargs):
-        self.object = self.get_object()
+        self.object = self.get_object() # noqa
         form = self.get_form()
         if not form.has_changed():
             return redirect(self.get_success_url())
@@ -119,25 +119,6 @@ class DjUserUpdateView(LoginRequiredMixin, UpdateView):
             return self.form_valid(form)
         else:
             return self.form_invalid(form)
-
-
-# class FollowView(LoginRequiredMixin, View):
-#     object = DjGrammUser
-#
-#     def get(self, request, pk, *args, **kwargs):
-#         author = self.object.objects.get(pk=pk)
-#         viewer = self.object.objects.get(pk=request.user.id)
-#         try:
-#             Following.follow(author, viewer)
-#             messages.success(request, f'You are following the {author.get_full_name()}.')
-#         except IntegrityError:
-#             messages.warning(request, f'You are already follow the {author.get_full_name()}.')
-#         except ValidationError as e:
-#             messages.warning(request, e.message)
-#         return JsonResponse({
-#             "count": author.followers.count(),
-#             "is_followed": author.is_followed(viewer)},
-#             status=200)
 
 
 class FollowingView(LoginRequiredMixin, View):
@@ -161,21 +142,3 @@ class FollowingView(LoginRequiredMixin, View):
             "count": author.followers.count(),
             "is_followed": author.is_followed(viewer)},
             status=200)
-
-#
-# class UnfollowView(LoginRequiredMixin, View):
-#     object = DjGrammUser
-#
-#     def get(self, request, pk, *args, **kwargs):
-#         author = self.object.objects.get(pk=pk)
-#         viewer = self.object.objects.get(pk=request.user.id)
-#         try:
-#             follower = author.followers.get(follower_user=viewer)
-#             Following.unfollow(follower)
-#             messages.success(request, f'You are unfollow the {author.get_full_name()}.')
-#         except Following.DoesNotExist:
-#             messages.warning(request, f'You are not follow the {author.get_full_name()}.')
-#         return JsonResponse({
-#             "count": author.followers.count(),
-#             "is_followed": author.is_followed(viewer)},
-#             status=200)
