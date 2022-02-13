@@ -9,9 +9,9 @@ https://docs.djangoproject.com/en/3.2/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.2/ref/settings/
 """
+import django_heroku
 import environ
 from pathlib import Path
-import django_heroku
 import django
 import cloudinary
 import cloudinary.uploader
@@ -106,7 +106,8 @@ WSGI_APPLICATION = 'django_gramm.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql',
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
 AUTH_USER_MODEL = 'auth_by_email.DjGrammUser'
