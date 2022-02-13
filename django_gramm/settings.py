@@ -144,7 +144,7 @@ USE_L10N = True
 
 USE_TZ = True
 
-# DISABLE_COLLECTSTATIC = 1
+DISABLE_COLLECTSTATIC = 1
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
@@ -162,7 +162,6 @@ MEDIA_URL = ""
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-
 EMAIL_BACKEND = env('EMAIL_BACKEND')
 MAILER_EMAIL_BACKEND = EMAIL_BACKEND
 EMAIL_HOST = env('EMAIL_HOST')
@@ -172,9 +171,7 @@ EMAIL_PORT = env('EMAIL_PORT')
 EMAIL_USE_SSL = env('EMAIL_USE_SSL')
 DEFAULT_FROM_EMAIL = env('DEFAULT_FROM_EMAIL')
 
-
 CLOUDINARY_URL = env('CLOUDINARY_URL')
-
 
 from auth_by_email.auth_settings import *
 django_heroku.settings(locals())
