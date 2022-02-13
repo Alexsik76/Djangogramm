@@ -106,8 +106,7 @@ WSGI_APPLICATION = 'django_gramm.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql',
     }
 }
 AUTH_USER_MODEL = 'auth_by_email.DjGrammUser'
@@ -144,7 +143,7 @@ USE_L10N = True
 
 USE_TZ = True
 
-DISABLE_COLLECTSTATIC = 1
+# DISABLE_COLLECTSTATIC = 1
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
