@@ -16,6 +16,7 @@ import django
 import cloudinary
 import cloudinary.uploader
 import cloudinary.api
+import dj_database_url
 
 env = environ.Env(
     DEBUG=(bool, True)
@@ -106,8 +107,7 @@ WSGI_APPLICATION = 'django_gramm.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        dj_database_url.config()
     }
 }
 AUTH_USER_MODEL = 'auth_by_email.DjGrammUser'
