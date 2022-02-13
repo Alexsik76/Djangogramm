@@ -31,8 +31,8 @@ export default {
   },
   methods: {
     animate_shake() {
-    gsap.fromTo('#follow-button', {x:-4, clearProps:"x", duration:0.02, yoyo: true},
-        {x:4, duration:0.02, clearProps:"x", repeat:5})
+    gsap.to('#follow-button', {x:8, clearProps:"x", yoyo: true, repeat:5, duration:0.04});
+
     },
     animate_blink() {
     gsap.to('#follow-button', {scale: 1.2, clearProps:"scale", duration:0.04})
@@ -41,9 +41,9 @@ export default {
     fetch_following() {
       axios.get(`/auth_by_email/following/${this.target_user_id}/`)
           .then(response => {
+            this.animate_blink();
             this.followed = response.data.is_followed;
             this.count = response.data.count;
-            this.animate_blink();
           })
       .catch(error => {
         this.animate_shake()

@@ -12,9 +12,10 @@ def get_field_attr(field_type: str, attr_name: str) -> str:
     """
     Gets placeholder or fas-icon depending on field type from dict.
     FIELD_ATTR: Dict(key(str): field type;
-                     value(dataclass.object): contains object of the class FieldAttrs:
-                                                                                 placeholder: str
-                                                                                 icon: str
+                     value(dataclass.object):
+                     contains object of the class FieldAttrs:
+                                                         placeholder: str
+                                                         icon: str
     )
     Provided types of te fields: [
                                 unknown
@@ -31,8 +32,10 @@ def get_field_attr(field_type: str, attr_name: str) -> str:
                                 new_password2
                                 title
                                 image]
-        For existing types of the fields returns placeholder "field" and icon "fas fa-question-circle"
-        For existing names of the attribute (not placeholder or icon) returns empty string
+        For existing types of the fields returns placeholder "field"
+        and icon "fas fa-question-circle".
+        For existing names of the attribute (not placeholder or icon)
+        returns empty string
      """
     obj = settings.FIELDS_ATTR.get(field_type, 'unknown')
     attr = getattr(obj, attr_name, '')
@@ -56,16 +59,22 @@ def add_alert_icon(field):
     """Adds alert icon to the field with errors"""
     if not field.errors:
         return ''
-    return mark_safe('<span class="icon is-small is-right"><i class="fas fa-exclamation-triangle"></i></span>')
+    return mark_safe('<span class="icon is-small is-right">'
+                     '<i class="fas fa-exclamation-triangle"></i>'
+                     '</span>')
 
 
 def add_field_icon(field):
     """
     Creates a specific icon for the field depending on its type.
-    See the list of supported classes in the docstring fot the get_field_attrs()
+    See the list of supported classes in the docstring fot the
+    get_field_attrs()
     """
     icon = get_field_attr(field.name, 'icon')
-    return '' if not icon else mark_safe(f'<span class="icon is-small is-left"><i class="{icon}"></i></span>')
+    return '' if not icon else \
+        mark_safe(f'<span class="icon is-small is-left">'
+                  f'<i class="{icon}"></i>'
+                  f'</span>')
 
 
 def update_widget_attrs(field, widget):
@@ -77,7 +86,8 @@ def update_widget_attrs(field, widget):
     widget.attrs.update(attrs)
 
 
-@register.inclusion_tag('auth_by_email/bulma_templates/field.html', takes_context=True)
+@register.inclusion_tag('auth_by_email/bulma_templates/field.html',
+                        takes_context=True)
 def bulma_field(context):
     """Creates field with bulma's markup."""
     field = context['field']
@@ -90,7 +100,8 @@ def bulma_field(context):
     }
 
 
-@register.inclusion_tag('auth_by_email/bulma_templates/form_content.html', takes_context=True)
+@register.inclusion_tag('auth_by_email/bulma_templates/form_content.html',
+                        takes_context=True)
 def form_bulma(context):
     """Creates form with bulma's markup"""
     form = context['form']
@@ -103,8 +114,7 @@ def form_bulma(context):
 def button_bulma(btn_class='is-success', name='Submit'):
     """Creates button with bulma classes"""
     return {'btn_class': btn_class,
-            'btn_name': name.capitalize()
-            }
+            'btn_name': name.capitalize()}
 
 
 @register.filter
@@ -139,9 +149,17 @@ def by_rows(page):
 
 @register.filter
 def is_liked(post, user):
+    """
+    Checks is post liked by user.
+    Uses by Vue component LikeIcon.vue
+    """
     return json.dumps(post.is_liked(user))
 
 
 @register.filter
 def is_followed(target_user, user):
+    """
+   Checks is user followed by user.
+   Uses by Vue component FollowButton.vue
+   """
     return json.dumps(target_user.is_followed(user))

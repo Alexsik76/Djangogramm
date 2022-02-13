@@ -15,9 +15,10 @@ logger = logging.getLogger(__name__)
 class MyQuerySet(models.QuerySet):
     def delete(self):
         """
-        Extended for the delete users avatar after delete user. This needs because:
-        "Keep in mind that this will, whenever possible, be executed purely in SQL,
-        and so the delete() methods of individual object instances will not necessarily be called during the process".
+        Extended for delete users avatar after delete user. This needs because:
+        "Keep in mind that this will, whenever possible,
+        be executed purely in SQL, and so delete() methods of individual object
+        instances will not necessarily be called during the process".
         """
         for item in self:
             item.delete_media()
@@ -30,7 +31,10 @@ class DjGrammUserManager(BaseUserManager):
         return MyQuerySet(model=self.model, using=self._db, hints=self._hints)
 
     def _create_user(self, email, password, **extra_fields):
-        """Creates user on stage signup or with createsuperuser command. Because has a minimal needed fields"""
+        """
+        Creates user on stage signup or with createsuperuser command.
+         Because has a minimal needed fields
+         """
         if not email:
             raise ValueError('The email must be set')
         email = self.normalize_email(email)

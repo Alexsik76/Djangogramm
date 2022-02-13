@@ -23,9 +23,7 @@
     <div class="bg"></div>
     <div class="bg bg2"></div>
     <div class="bg bg3"></div>
-    {% load render_bundle from webpack_loader %}
-    {% load webpack_static from webpack_loader %}
-    {% render_bundle 'app' %}
+
  <script>
         document.addEventListener('DOMContentLoaded', () => {
             (document.querySelectorAll('.notification .delete') || []).forEach(($delete) => {
@@ -36,5 +34,6 @@
             });
         });
     </script>
+<script src="{% static 'js/app.ab47bd02.js' %}"></script>
 </body>
 </html>

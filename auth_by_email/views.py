@@ -138,7 +138,3 @@ class FollowingView(LoginRequiredMixin, View):
             "count": author.followers.count(),
             "is_followed": author.is_followed(viewer)},
             status=200)
-
-    @staticmethod
-    def handle_error(error):
-        return JsonResponse({'error_message': error.message}, status=403)

@@ -35,7 +35,7 @@ SECRET_KEY = env('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = env('DEBUG')
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -72,7 +72,7 @@ MIDDLEWARE = [
 ROOT_URLCONF = 'django_gramm.urls'
 
 TEMPLATES_DIR = BASE_DIR / 'templates'
-FRONTEND_DIR = BASE_DIR / 'frontend'
+
 
 FORM_RENDERER = 'django.forms.renderers.TemplatesSetting'
 
@@ -150,12 +150,9 @@ DISABLE_COLLECTSTATIC = 1
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
 
 # STATIC_ROOT = BASE_DIR / "static"
+STATICFILES_DIRS = [BASE_DIR / "static",
+                    BASE_DIR / "frontend/dist"]
 STATIC_URL = '/static/'
-STATICFILES_DIRS = [
-    BASE_DIR / "frontend",
-    BASE_DIR / "static",
-]
-
 
 MEDIA_ROOT = ""
 MEDIA_URL = ""
@@ -178,19 +175,6 @@ DEFAULT_FROM_EMAIL = env('DEFAULT_FROM_EMAIL')
 
 CLOUDINARY_URL = env('CLOUDINARY_URL')
 
-CORS_ORIGIN_WHITELIST = (
-    'http://localhost:8080',
-)
-
-WEBPACK_LOADER = {
-  'DEFAULT': {
-        'CACHE': not DEBUG,
-        'POLL_INTERVAL': 0.1,
-        'IGNORE': [r'.+\.hot-update.js', r'.+\.map'],
-        'BUNDLE_DIR_NAME': '/bundles/',
-        'STATS_FILE': FRONTEND_DIR / 'webpack-stats.json'
-  }
-}
 
 from auth_by_email.auth_settings import *
-# django_heroku.settings(locals())
+django_heroku.settings(locals())
