@@ -11,7 +11,6 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 """
 import environ
 from pathlib import Path
-import django_heroku
 import django
 import cloudinary
 import cloudinary.uploader
@@ -47,12 +46,11 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    # 'django_gramm.static_config.MyStaticFilesConfig',
+    'django.forms',
     'cloudinary',
     'corsheaders',
-    'auth_by_email.apps.AuthByEmailConfig',
-    'gramm_app.apps.GrammappConfig',
-    'django.forms',
+    'auth_by_email',
+    'gramm_app',
     'webpack_loader',
 
 ]
@@ -144,7 +142,6 @@ USE_L10N = True
 
 USE_TZ = True
 
-DISABLE_COLLECTSTATIC = 1
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
@@ -193,4 +190,4 @@ WEBPACK_LOADER = {
 }
 
 from auth_by_email.auth_settings import *
-# django_heroku.settings(locals())
+
