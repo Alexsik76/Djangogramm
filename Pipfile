@@ -12,6 +12,7 @@ multiavatar = "*"
 tzdata = "*"
 cloudinary = "*"
 django-environ = "*"
+fontawesomefree = "*"
 
 [dev-packages]
 pytest = "*"

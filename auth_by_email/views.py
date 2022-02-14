@@ -87,7 +87,6 @@ class Activate(View):
             user.grant_user_permissions()
             user.save()
             update_session_auth_hash(request, user)  # Important, to update the session with the new password
-            messages.success(request, f'You are successful login as {user.get_full_name()}.')
             return redirect('index')
         else:
             return render(request, self.template_name, {'form': form})

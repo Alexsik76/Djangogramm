@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.forms',
+    'fontawesomefree',
     'cloudinary',
     'corsheaders',
     'auth_by_email',
