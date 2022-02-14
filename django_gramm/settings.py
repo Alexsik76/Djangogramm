@@ -104,9 +104,9 @@ WSGI_APPLICATION = 'django_gramm.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql'
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
     }
-
 }
 AUTH_USER_MODEL = 'auth_by_email.DjGrammUser'
 LOGIN_REDIRECT_URL = 'index'
