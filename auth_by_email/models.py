@@ -68,6 +68,9 @@ class DjGrammUser(AbstractUser):
                              use_filename=True)
     objects = DjGrammUserManager()
 
+    class Meta:
+        app_label = 'auth_by_email'
+
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = []
 
