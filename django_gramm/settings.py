@@ -9,14 +9,12 @@ https://docs.djangoproject.com/en/3.2/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.2/ref/settings/
 """
-import django_heroku
 import environ
 from pathlib import Path
 import django
 import cloudinary
 import cloudinary.uploader
 import cloudinary.api
-
 
 env = environ.Env(
     DEBUG=(bool, True)
@@ -36,7 +34,7 @@ SECRET_KEY = env('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = env('DEBUG')
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = []
 
 
 # Application definition
@@ -50,8 +48,10 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'django.forms',
     'cloudinary',
+    'corsheaders',
     'auth_by_email',
     'gramm_app',
+    'webpack_loader',
 
 ]
 
@@ -63,13 +63,14 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
 ]
 
 ROOT_URLCONF = 'django_gramm.urls'
 
 TEMPLATES_DIR = BASE_DIR / 'templates'
-
+FRONTEND_DIR = BASE_DIR / 'frontend'
 
 FORM_RENDERER = 'django.forms.renderers.TemplatesSetting'
 
@@ -129,6 +130,7 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+
 # Internationalization
 # https://docs.djangoproject.com/en/3.2/topics/i18n/
 
@@ -140,15 +142,17 @@ USE_L10N = True
 
 USE_TZ = True
 
-DISABLE_COLLECTSTATIC = 1
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
 
 # STATIC_ROOT = BASE_DIR / "static"
-STATICFILES_DIRS = [BASE_DIR / "static",
-                    BASE_DIR / "frontend/dist"]
 STATIC_URL = '/static/'
+STATICFILES_DIRS = [
+    BASE_DIR / "frontend",
+    BASE_DIR / "static",
+]
+
 
 MEDIA_ROOT = ""
 MEDIA_URL = ""
@@ -157,6 +161,7 @@ MEDIA_URL = ""
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
 
 EMAIL_BACKEND = env('EMAIL_BACKEND')
 MAILER_EMAIL_BACKEND = EMAIL_BACKEND
@@ -167,7 +172,22 @@ EMAIL_PORT = env('EMAIL_PORT')
 EMAIL_USE_SSL = env('EMAIL_USE_SSL')
 DEFAULT_FROM_EMAIL = env('DEFAULT_FROM_EMAIL')
 
+
 CLOUDINARY_URL = env('CLOUDINARY_URL')
 
+CORS_ORIGIN_WHITELIST = (
+    'http://localhost:8080',
+)
+
+WEBPACK_LOADER = {
+  'DEFAULT': {
+        'CACHE': not DEBUG,
+        'POLL_INTERVAL': 0.1,
+        'IGNORE': [r'.+\.hot-update.js', r'.+\.map'],
+        'BUNDLE_DIR_NAME': '/bundles/',
+        'STATS_FILE': FRONTEND_DIR / 'webpack-stats.json'
+  }
+}
+
 from auth_by_email.auth_settings import *
-django_heroku.settings(locals())
+
