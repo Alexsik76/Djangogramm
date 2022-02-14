@@ -48,10 +48,10 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'cloudinary',
-    'auth_by_email.apps.AuthByEmailConfig',
-    'gramm_app.apps.GrammappConfig',
     'django.forms',
+    'cloudinary',
+    'auth_by_email',
+    'gramm_app',
 
 ]
 
