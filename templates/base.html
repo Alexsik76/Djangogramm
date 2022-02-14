@@ -33,7 +33,10 @@
                 });
             });
         });
-    </script>
-<script src="{% static 'js/app.ab47bd02.js' %}"></script>
+</script>
+{% load render_bundle from webpack_loader %}
+{% load webpack_static from webpack_loader %}
+{% render_bundle 'app' %}
+
 </body>
 </html>
