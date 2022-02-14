@@ -16,7 +16,7 @@ import django
 import cloudinary
 import cloudinary.uploader
 import cloudinary.api
-import dj_database_url
+
 
 env = environ.Env(
     DEBUG=(bool, True)
