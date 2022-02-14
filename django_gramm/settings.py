@@ -48,13 +48,10 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    # 'django_gramm.static_config.MyStaticFilesConfig',
     'cloudinary',
-    'corsheaders',
     'auth_by_email.apps.AuthByEmailConfig',
     'gramm_app.apps.GrammappConfig',
     'django.forms',
-    'webpack_loader',
 
 ]
 
