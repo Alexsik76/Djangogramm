@@ -16,6 +16,7 @@ from django.views import View
 from django.views.generic import UpdateView, DetailView
 from .forms import SignupForm, UserActivationForm, UserUpdateForm
 from .models import Following
+from utils import create_inactive_user, create_mesage_body
 
 # Create your views here.
 
@@ -31,22 +32,13 @@ class Signup(View):
     def post(self, request):
         form = self.form_class(request.POST)
         if form.is_valid():
-            # Create an inactive user with no password:
-            user = form.save(commit=False)
-            user.is_active = False
-            user.set_unusable_password()
-            user.username = user.email
+            user = create_inactive_user(form)
             user.save()
-            # Sending an email to the user with the token:
-            mail_subject = 'Activate your account.'
-            message = render_to_string('registration/activation_email.html', {
-                'user': user,
-                'domain': get_current_site(request).domain,
-                'uid': urlsafe_base64_encode(force_bytes(user.pk)),
-                'token': default_token_generator.make_token(user),
-            })
-            to_email = form.cleaned_data.get('email')
-            email = EmailMessage(mail_subject, message, to=[to_email])
+            message_body = create_mesage_body(user, request)
+            to_email = user.email
+            email = EmailMessage(subject='Activate your account.',
+                                 body=message_body,
+                                 to=[to_email])
             email.send(fail_silently=False)
             return render(request, 'registration/signup_done.html')
         else:

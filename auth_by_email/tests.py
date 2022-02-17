@@ -1,4 +1,5 @@
 from django.test import TestCase, Client
+from django.core import mail
 from django.urls import reverse
 from django.core.exceptions import ValidationError
 from auth_by_email.models import DjGrammUser, Following
@@ -6,6 +7,7 @@ import random
 import cloudinary
 from cloudinary import CloudinaryResource
 from cloudinary.models import CloudinaryField
+from utils import create_mesage_body
 
 # Create your tests here.
 SUFFIX = random.randint(10000, 99999)
@@ -16,6 +18,9 @@ class SignupViewTest(TestCase):
     def test_signup(self):
         response = self.client.get(reverse('signup'))
         self.assertEqual(response.status_code, 200)
+
+    def test_email_send(self):
+
 
     def test_login(self):
         response = self.client.get(reverse('login'))
@@ -82,18 +87,6 @@ class AllAuthByEmailViewsTest(TestCase):
         c.login(email='example@email.com', password='password12')
         response = c.get(reverse('password_reset_complete'))
         self.assertEqual(response.status_code, 200)
-
-    def test_follow_view(self):
-        c = Client(HTTP_REFERER=reverse('signup'))
-        c.login(email='example@email.com', password='password12')
-        response = c.get(reverse('follow', args=[1]))
-        self.assertEqual(response.status_code, 302)
-
-    def test_unfollow(self):
-        c = Client(HTTP_REFERER=reverse('signup'))
-        c.login(email='example@email.com', password='password12')
-        response = c.get(reverse('unfollow', args=[1]))
-        self.assertEqual(response.status_code, 302)
 
 
 class DjUserModelTest(TestCase):
