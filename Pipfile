@@ -13,6 +13,7 @@ tzdata = "*"
 cloudinary = "*"
 django-environ = "*"
 fontawesomefree = "*"
+django-cors-headers = "*"
 
 [dev-packages]
 pytest = "*"
