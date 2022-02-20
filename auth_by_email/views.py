@@ -3,7 +3,6 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.tokens import default_token_generator
 from django.contrib.sites.shortcuts import get_current_site
 from django.core.exceptions import ValidationError
-from django.db import IntegrityError
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render, redirect
 from django.urls import reverse
@@ -11,7 +10,6 @@ from django.utils.http import urlsafe_base64_decode
 from django.views import View
 from django.views.generic import UpdateView, DetailView
 from .forms import SignupForm, UserActivationForm, UserUpdateForm
-from .models import Following
 from .utils import create_email
 
 # Create your views here.
@@ -53,7 +51,6 @@ class Activate(View):
         except(TypeError, ValueError, OverflowError, DjGrammUser.DoesNotExist):
             user = None
         if user is not None and default_token_generator.check_token(user, kwargs['token']):
-            # activate user and login:
             user.is_active = True
             user.save()
             login(request, user)
@@ -71,7 +68,7 @@ class Activate(View):
             user = form.save()
             user.grant_user_permissions()
             user.save()
-            update_session_auth_hash(request, user)  # Important, to update the session with the new password
+            update_session_auth_hash(request, user)
             return redirect('index')
         else:
             return render(request, self.template_name, {'form': form})
@@ -114,7 +111,9 @@ class FollowingView(LoginRequiredMixin, View):
         try:
             viewer.follow(author)
         except ValidationError as e:
-            return JsonResponse({'error_message': e.message}, status=403)
+            return JsonResponse({
+                'error_message': e.message},
+                status=403)
         return JsonResponse({
             "count": author.followers.count(),
             "is_followed": author.is_followed(viewer)},

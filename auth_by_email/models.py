@@ -3,13 +3,10 @@ from django.db import models
 from django.contrib.auth.models import AbstractUser, BaseUserManager
 from django.contrib.auth.models import Permission
 from django.utils.translation import gettext_lazy as _
-import logging
 from cloudinary.models import CloudinaryField
 import cloudinary.api
 
 # Create your models here.
-
-logger = logging.getLogger(__name__)
 
 
 class MyQuerySet(models.QuerySet):
@@ -33,8 +30,8 @@ class DjGrammUserManager(BaseUserManager):
     def _create_user(self, email, password, **extra_fields):
         """
         Creates user on stage signup or with createsuperuser command.
-         Because has a minimal needed fields
-         """
+        Because has a minimal needed fields
+        """
         if not email:
             raise ValueError('The email must be set')
         email = self.normalize_email(email)
@@ -78,15 +75,18 @@ class DjGrammUser(AbstractUser):
         return self.email
 
     def make_inactive_user(self):
+        """Makes inactive user for the registration stage"""
         self.is_active = False
         self.set_unusable_password()
         self.username = self.email
         return self
 
     def delete_media(self):
+        """For delete media when the user is deleted directly or in queryset"""
         cloudinary.api.delete_resources([self.avatar])
 
     def delete(self, using=None, keep_parents=False):
+        """Also deletes avatar from cloudinary"""
         self.delete_media()
         return super().delete()
 
@@ -101,6 +101,10 @@ class DjGrammUser(AbstractUser):
         self.user_permissions.set(required_perms)
 
     def follow(self, another_user):
+        """
+        Creates Following object.
+        In the case of another_user is followed, unfollow it
+        """
         if another_user.is_followed(self):
             self.unfollow(another_user)
         else:
@@ -119,8 +123,6 @@ class Following(models.Model):
     """
     Followers are the users that follow you.
     Following refers to the list of users that you follow.
-        Meta.constraints forbids tracking a user more than once.
-        Modified method save forbids tracking oneself.
     """
     follower_user = models.ForeignKey(DjGrammUser, related_name="following",
                                       on_delete=models.CASCADE)
@@ -132,6 +134,7 @@ class Following(models.Model):
                f"{self.following_user.get_full_name()}"
 
     def save(self, *args, **kwargs):
+        """Forbids to follow oneself"""
         if self.follower_user == self.following_user:
             raise ValidationError('You can`t following yourself.')
         super().save(*args, **kwargs)
