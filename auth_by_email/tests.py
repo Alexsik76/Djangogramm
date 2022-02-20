@@ -1,13 +1,15 @@
+import django.conf
 from django.test import TestCase, Client
 from django.core import mail
 from django.urls import reverse
 from django.core.exceptions import ValidationError
-from auth_by_email.models import DjGrammUser, Following
+from auth_by_email.models import DjGrammUser
+from auth_by_email.forms import SignupForm
 import random
 import cloudinary
 from cloudinary import CloudinaryResource
 from cloudinary.models import CloudinaryField
-from utils import create_mesage_body
+from .utils import create_email
 
 # Create your tests here.
 SUFFIX = random.randint(10000, 99999)
@@ -15,12 +17,32 @@ API_TEST_ID = "dj_test_{}".format(SUFFIX)
 
 
 class SignupViewTest(TestCase):
-    def test_signup(self):
+    def setUp(self) -> None:
+        self.form = SignupForm(data={'email': 'example@email.com'})
+        self.user = self.form.save(commit=False)
+        self.user.make_inactive_user()
+        self.from_email = \
+            django.conf.settings.DEFAULT_FROM_EMAIL or 'test@email'
+
+    def test_create_inactive_user(self):
+        self.assertEqual(self.user.username, 'example@email.com')
+        self.assertEqual(self.user.is_active, False)
+
+    def test_send_email(self):
+        message = create_email(self.user, 'test.domain')
+        message.send(fail_silently=False)
+        self.assertEqual(len(mail.outbox), 1)
+        self.assertEqual(mail.outbox[0].from_email, self.from_email)
+        self.assertEqual(mail.outbox[0].subject, 'Activate your account.')
+
+    def test_signup_get(self):
         response = self.client.get(reverse('signup'))
         self.assertEqual(response.status_code, 200)
 
-    def test_email_send(self):
-
+    def test_signup_post(self):
+        response = self.client.post(reverse('signup'),
+                                    data={'email': 'example@email.com'})
+        self.assertEqual(response.status_code, 200)
 
     def test_login(self):
         response = self.client.get(reverse('login'))
@@ -30,15 +52,16 @@ class SignupViewTest(TestCase):
 class AllAuthByEmailViewsTest(TestCase):
     def setUp(self) -> None:
         cloudinary.config(cloud_name='dgh6qdngr')
-        user = DjGrammUser.objects._create_user(id=1,
-                                                email='example@email.com',
-                                                bio='mister',
-                                                avatar="image/upload/v1234/{}.jpg".format(API_TEST_ID),
-                                                first_name='John',
-                                                last_name='Snow',
-                                                password='password12')
+        user = DjGrammUser \
+            .objects._create_user(id=1,
+                                  email='example@email.com',
+                                  bio='mister',
+                                  avatar="image/upload/v1234/{}.jpg".format(
+                                      API_TEST_ID),
+                                  first_name='John',
+                                  last_name='Snow',
+                                  password='password12')
         user.grant_user_permissions()
-        self.user_id = 1
 
     def test_logout(self):
         c = Client()
@@ -50,7 +73,8 @@ class AllAuthByEmailViewsTest(TestCase):
         c = CloudinaryField('image')
         res = CloudinaryResource(public_id=API_TEST_ID, format='jpg')
         # Can't compare the objects, so compare url instead
-        self.assertEqual(c.to_python('{}.jpg'.format(API_TEST_ID)).build_url(), res.build_url())
+        self.assertEqual(c.to_python('{}.jpg'.format(API_TEST_ID)).build_url(),
+                         res.build_url())
 
     def test_user_image_field(self):
         user = DjGrammUser.objects.get(email='example@email.com')
@@ -116,7 +140,62 @@ class DjUserModelTest(TestCase):
         self.assertEqual(user.has_perm('gramm_app.view_post'), True)
         self.assertEqual(user.has_perm('gramm_app.delete_post'), True)
 
+
+class FollowViewTest(TestCase):
+    def setUp(self) -> None:
+        self.user = \
+            DjGrammUser.objects._create_user(
+                id=1,
+                email='example@email.com',
+                bio='mister',
+                avatar='picture.png',
+                first_name='John',
+                last_name='Snow',
+                password='password12')
+        self.viewer = \
+            DjGrammUser.objects._create_user(
+                id=2,
+                email='example2@email.com',
+                bio='mister',
+                avatar='picture2.png',
+                first_name='Tyrion',
+                last_name='Lannister',
+                password='password13')
+
     def test_follow_self(self):
-        user = DjGrammUser.objects.get(first_name='John')
         with self.assertRaises(ValidationError):
-            Following.follow(user, user)
+            self.viewer.follow(self.viewer)
+
+    def test_follow(self):
+        self.viewer.follow(self.user)
+        self.assertTrue(self.user.is_followed(self.viewer))
+
+    def test_unfollow(self):
+        self.viewer.follow(self.user)
+        self.viewer.unfollow(self.user)
+        self.assertFalse(self.user.is_followed(self.viewer))
+
+    def test_follow_twice(self):
+        self.viewer.follow(self.user)
+        self.viewer.follow(self.user)
+        self.assertFalse(self.user.is_followed(self.viewer))
+
+    def test_following_view(self):
+        c = Client()
+        c.login(email='example2@email.com', password='password13')
+        response = c.get(reverse('following', args=[1]))
+        self.assertJSONEqual(response.content,
+                             {"count": 1,
+                              "is_followed": True})
+        response2 = c.get(reverse('following', args=[1]))
+        self.assertJSONEqual(response2.content,
+                             {"count": 0,
+                              "is_followed": False})
+
+        response3 = c.get(reverse('following', args=[2]))
+        self.assertEqual(response3.status_code, 403)
+        self.assertJSONEqual(response3.content,
+                             {
+                                 'error_message':
+                                     'You can`t following yourself.'
+                             })

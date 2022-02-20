@@ -35,7 +35,7 @@ export default {
 
     },
     animate_blink() {
-    gsap.to('#follow-button', {scale: 1.2, clearProps:"scale", duration:0.04})
+    gsap.to('#follow-button', {scale: 1.2, clearProps:"scale", duration:0.06})
     },
 
     fetch_following() {

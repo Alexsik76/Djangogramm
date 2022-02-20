@@ -1,22 +1,18 @@
-from django.contrib import messages
 from django.contrib.auth import get_user_model, login, update_session_auth_hash
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.tokens import default_token_generator
 from django.contrib.sites.shortcuts import get_current_site
 from django.core.exceptions import ValidationError
-from django.core.mail import EmailMessage
 from django.db import IntegrityError
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render, redirect
-from django.template.loader import render_to_string
 from django.urls import reverse
-from django.utils.encoding import force_bytes
-from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
+from django.utils.http import urlsafe_base64_decode
 from django.views import View
 from django.views.generic import UpdateView, DetailView
 from .forms import SignupForm, UserActivationForm, UserUpdateForm
 from .models import Following
-from utils import create_inactive_user, create_mesage_body
+from .utils import create_email
 
 # Create your views here.
 
@@ -32,14 +28,11 @@ class Signup(View):
     def post(self, request):
         form = self.form_class(request.POST)
         if form.is_valid():
-            user = create_inactive_user(form)
+            user = form.save(commit=False)
+            user.make_inactive_user()
             user.save()
-            message_body = create_mesage_body(user, request)
-            to_email = user.email
-            email = EmailMessage(subject='Activate your account.',
-                                 body=message_body,
-                                 to=[to_email])
-            email.send(fail_silently=False)
+            message = create_email(user, get_current_site(request).domain)
+            message.send(fail_silently=False)
             return render(request, 'registration/signup_done.html')
         else:
             return render(request, self.template_name, {'form': form})
@@ -119,10 +112,7 @@ class FollowingView(LoginRequiredMixin, View):
         author = self.object.objects.get(pk=pk)
         viewer = self.object.objects.get(pk=request.user.id)
         try:
-            Following.follow(author, viewer)
-        except IntegrityError:
-            follower = author.followers.get(follower_user=viewer)
-            Following.unfollow(follower)
+            viewer.follow(author)
         except ValidationError as e:
             return JsonResponse({'error_message': e.message}, status=403)
         return JsonResponse({

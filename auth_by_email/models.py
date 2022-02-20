@@ -77,6 +77,12 @@ class DjGrammUser(AbstractUser):
     def __str__(self):
         return self.email
 
+    def make_inactive_user(self):
+        self.is_active = False
+        self.set_unusable_password()
+        self.username = self.email
+        return self
+
     def delete_media(self):
         cloudinary.api.delete_resources([self.avatar])
 
@@ -94,8 +100,19 @@ class DjGrammUser(AbstractUser):
                           perms_codename in all_perms_codename]
         self.user_permissions.set(required_perms)
 
-    def is_followed(self, user):
-        return self.followers.filter(follower_user_id=user.id).exists()
+    def follow(self, another_user):
+        if another_user.is_followed(self):
+            self.unfollow(another_user)
+        else:
+            Following.objects.create(following_user=another_user,
+                                     follower_user=self)
+
+    def unfollow(self, another_user):
+        following = self.following.get(following_user_id=another_user.id)
+        following.delete()
+
+    def is_followed(self, another_user):
+        return self.followers.filter(follower_user_id=another_user.id).exists()
 
 
 class Following(models.Model):
@@ -110,24 +127,11 @@ class Following(models.Model):
     following_user = models.ForeignKey(DjGrammUser, related_name="followers",
                                        on_delete=models.CASCADE)
 
-    class Meta:
-        constraints = [
-            models.UniqueConstraint(fields=['follower_user', 'following_user'],
-                                    name='unique_follow'),
-        ]
-
     def __str__(self):
-        return f"{self.follower_user.get_full_name()} following {self.following_user.get_full_name()}"
+        return f"{self.follower_user.get_full_name()} follows " \
+               f"{self.following_user.get_full_name()}"
 
     def save(self, *args, **kwargs):
         if self.follower_user == self.following_user:
             raise ValidationError('You can`t following yourself.')
         super().save(*args, **kwargs)
-
-    @classmethod
-    def follow(cls, following_user, follower_user):
-        cls.objects.create(following_user=following_user,
-                           follower_user=follower_user)
-
-    def unfollow(self):
-        self.delete()
