@@ -24,16 +24,7 @@
     <div class="bg bg2"></div>
     <div class="bg bg3"></div>
 
- <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            (document.querySelectorAll('.notification .delete') || []).forEach(($delete) => {
-                const $notification = $delete.parentNode;
-                $delete.addEventListener('click', () => {
-                    $notification.parentNode.removeChild($notification);
-                });
-            });
-        });
-</script>
+
 {% load render_bundle from webpack_loader %}
 {% load webpack_static from webpack_loader %}
 {% render_bundle 'app' %}

@@ -1,11 +1,9 @@
 <template>
   <button @click="postLike" class="button m-0">
       <span class="icon-text has-text-danger">
-        <transition>
             <i :id="`animated-icon-${this.id}`" :class="getIconClass">
               {{" " + count }}
             </i>
-          </transition>
         </span>
   </button>
 </template>
@@ -51,15 +49,3 @@ export default {
   },
 }
 </script>
-
-<!--<style>-->
-<!--.v-enter-active,-->
-<!--.v-leave-active {-->
-<!--  transition: opacity 0.5s ease;-->
-<!--}-->
-
-<!--.v-enter-from,-->
-<!--.v-leave-to {-->
-<!--  opacity: 0;-->
-<!--}-->
-<!--</style>-->
