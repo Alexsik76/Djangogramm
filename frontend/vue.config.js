@@ -1,17 +1,30 @@
 const BundleTracker = require("webpack-bundle-tracker");
 
 module.exports = {
-  publicPath: 'http://localhost:8080/',
-  outputDir: './dist/',
+
+  filenameHashing: false,
+  productionSourceMap: false,
+  publicPath: process.env.NODE_ENV === 'production'
+        ? ''
+        : 'http://localhost:8080/',
+  outputDir: './dist/webpack_bundles/',
 
   chainWebpack: config => {
 
     config.optimization
-      .splitChunks(false)
+    .splitChunks(false)
+
+    config.plugins.delete('html')
+    config.plugins.delete('preload')
+    config.plugins.delete('prefetch')
 
     config
       .plugin('BundleTracker')
-      .use(BundleTracker, [{filename: './webpack-stats.json'}])
+      .use(BundleTracker, [
+          {
+            filename: './webpack-stats.json'
+          }
+      ])
 
     config.resolve.alias
       .set('__STATIC__', 'static')
@@ -26,5 +39,5 @@ module.exports = {
       .headers({"Access-Control-Allow-Origin": ["*"]})
   },
 
-  runtimeCompiler: true
+  // runtimeCompiler: true
 };

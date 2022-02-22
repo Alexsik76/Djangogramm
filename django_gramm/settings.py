@@ -32,10 +32,8 @@ environ.Env.read_env(BASE_DIR / '.env')
 
 SECRET_KEY = env('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
+ALLOWED_HOSTS = ['*']
 DEBUG = env('DEBUG')
-
-ALLOWED_HOSTS = []
-
 
 # Application definition
 
@@ -47,7 +45,6 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.forms',
-    'fontawesomefree',
     'cloudinary',
     'corsheaders',
     'auth_by_email',
@@ -147,11 +144,11 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
 
-# STATIC_ROOT = BASE_DIR / "static"
+STATIC_ROOT = BASE_DIR / "static"
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [
-    BASE_DIR / "frontend",
-    BASE_DIR / "static",
+    BASE_DIR / "frontend/dist",
+    BASE_DIR / "static_dev",
 ]
 
 
@@ -179,16 +176,27 @@ CLOUDINARY_URL = env('CLOUDINARY_URL')
 CORS_ORIGIN_WHITELIST = (
     'http://localhost:8080',
 )
+# SECURE_CONTENT_TYPE_NOSNIFF = False
+# WEBPACK_LOADER = {
+#   'DEFAULT': {
+#         'CACHE': DEBUG,
+#         'POLL_INTERVAL': 0.1,
+#         'IGNORE': [r'.+\.hot-update.js', r'.+\.map'],
+#         'BUNDLE_DIR_NAME': '/bundles/',
+#         'STATS_FILE': FRONTEND_DIR / 'webpack-stats.json'
+#   }
+# }
+
 
 WEBPACK_LOADER = {
-  'DEFAULT': {
+    'DEFAULT': {
         'CACHE': not DEBUG,
+        # 'BUNDLE_DIR_NAME': 'vue/',
+        'STATS_FILE': FRONTEND_DIR / 'webpack-stats.json',
         'POLL_INTERVAL': 0.1,
-        'IGNORE': [r'.+\.hot-update.js', r'.+\.map'],
-        'BUNDLE_DIR_NAME': '/bundles/',
-        'STATS_FILE': FRONTEND_DIR / 'webpack-stats.json'
-  }
+        'TIMEOUT': None,
+        'IGNORE': [r'.+\.hot-update.js', r'.+\.map']
+    }
 }
-
 from auth_by_email.auth_settings import *
 

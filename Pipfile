@@ -7,11 +7,10 @@ name = "pypi"
 django = "*"
 pillow = "*"
 gunicorn = "*"
-multiavatar = "*"
 tzdata = "*"
 cloudinary = "*"
 django-environ = "*"
-fontawesomefree = "*"
+
 
 [dev-packages]
 pytest = "*"
