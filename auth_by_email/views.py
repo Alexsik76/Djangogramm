@@ -111,10 +111,8 @@ class FollowingView(LoginRequiredMixin, View):
         try:
             viewer.follow(author)
         except ValidationError as e:
-            return JsonResponse({
-                'error_message': e.message},
-                status=403)
+            return JsonResponse({'message': e.message}, status=403)
         return JsonResponse({
             "count": author.followers.count(),
-            "is_followed": author.is_followed(viewer)},
-            status=200)
+            "is_followed": author.is_followed(viewer)
+        })
