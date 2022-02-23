@@ -146,12 +146,9 @@ There are two options:
 
 After this stage, it is enough to start only the Django server.
 
+For creating dummy users added command `createuser` (`python manage.py createuser`) 
+which allow creating users without real email.
 
+#### Testing 
 
-
-
-# django_blog
-
-![forbidden follow](https://res.cloudinary.com/dgh6qdngr/image/upload/v1645389428/django_gramm/other/follow_forbidden.gif)
-
-![allow follow](https://res.cloudinary.com/dgh6qdngr/image/upload/v1645390101/django_gramm/other/follow_allow.gif)
+Project covered to 85% by tests.
