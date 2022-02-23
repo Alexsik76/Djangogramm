@@ -176,22 +176,10 @@ CLOUDINARY_URL = env('CLOUDINARY_URL')
 CORS_ORIGIN_WHITELIST = (
     'http://localhost:8080',
 )
-# SECURE_CONTENT_TYPE_NOSNIFF = False
-# WEBPACK_LOADER = {
-#   'DEFAULT': {
-#         'CACHE': DEBUG,
-#         'POLL_INTERVAL': 0.1,
-#         'IGNORE': [r'.+\.hot-update.js', r'.+\.map'],
-#         'BUNDLE_DIR_NAME': '/bundles/',
-#         'STATS_FILE': FRONTEND_DIR / 'webpack-stats.json'
-#   }
-# }
-
 
 WEBPACK_LOADER = {
     'DEFAULT': {
         'CACHE': not DEBUG,
-        # 'BUNDLE_DIR_NAME': 'vue/',
         'STATS_FILE': FRONTEND_DIR / 'webpack-stats.json',
         'POLL_INTERVAL': 0.1,
         'TIMEOUT': None,
