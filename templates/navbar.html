@@ -1,0 +1,44 @@
+<nav class="navbar is-transparent">
+    <div class="navbar-brand">
+        <div class="navbar-item has-dropdown is-hoverable">
+            <div class="content is-large icon has-text-info">
+                <i class="fab fa-2x fa-instagram"></i>
+            </div>
+            <div class="navbar-dropdown">
+                <p class="navbar-item">
+                    Django Gramm
+                </p>
+            </div>
+        </div>
+    </div>
+    <div id="navbarBasicExample" class="navbar-menu">
+        <div class="navbar-start">
+            <a class="navbar-item" href="{% url 'index' %}">Home</a>
+            <a class="navbar-item" href="{% url 'post-create' %}">Create post</a>
+            <a class="navbar-item" href="{% url 'post-list' %}">All posts</a>
+        </div>
+        <div class="navbar-end">
+            {% if user.is_authenticated %}
+                <div class="navbar-item">
+                    <div class="buttons">
+                        <a class="button is-primary" href="{% url 'user_detail' user.id %}">
+                            {{ user.email }}
+                        </a>
+                        <a class="button is-warning" href="{% url 'logout' %}">
+                            <strong>Logout</strong>
+                        </a>
+                    </div>
+                </div>
+            {% else %}
+                <div class="navbar-item">
+                    <div class="buttons">
+                        <a class="button is-primary" href="{% url 'signup' %}">
+                            <strong>Sign up</strong>
+                        </a>
+                        <a class="button is-light" href="{% url 'login' %}">Log in</a>
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</nav>
