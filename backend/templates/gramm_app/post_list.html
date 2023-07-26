@@ -1,0 +1,54 @@
+{% extends '../base.html' %}
+{% load static %}
+{% load bulma_filters %}
+{% block content %}
+    <h4 class="title">Posts:</h4>
+    <div id="like-icon-vue">
+        {% for row in page_obj|by_rows %}
+            <div class="tile is-ancestor">
+                {% for post in row %}
+                    <div class="tile is-parent">
+                        <div class="tile is-child box">
+                            {% include 'gramm_app/post_content.html' %}
+                        </div>
+                    </div>
+                {% empty %}
+                    <div class="tile is-parent">
+                        <article class="tile is-child box">
+                            <p>No posts yet.</p>
+                        </article>
+                    </div>
+                {% endfor %}
+            </div>
+        {% endfor %}
+        <nav class="pagination is-centered" role="navigation" aria-label="pagination">
+            {% if page_obj.has_previous %}
+                <a class="pagination-previous" href="?page={{ page_obj.previous_page_number }}">Previous</a>
+            {% endif %}
+            {% if page_obj.has_next %}
+                <a class="pagination-next" href="?page={{ page_obj.next_page_number }}">Next page</a>
+            {% endif %}
+            <ul class="pagination-list">
+                {% if page_obj.number != 1 %}
+                    <li><a class="pagination-link" aria-label="Goto page 1" href="?page=1">1</a></li>
+                {% endif %}
+                {% if page_obj.has_previous and page_obj.previous_page_number != 1 %}
+                    <li><span class="pagination-ellipsis">&hellip;</span></li>
+                    <li><a class="pagination-link" aria-label="Goto page {{ page_obj.previous_page_number }}"
+                           href="?page={{ page_obj.previous_page_number }}">{{ page_obj.previous_page_number }}</a></li>
+                {% endif %}
+                <li><a class="pagination-link is-current" aria-label="Page {{ page_obj.number }}"
+                       aria-current="page">{{ page_obj.number }}</a></li>
+                {% if page_obj.has_next and page_obj.next_page_number != page_obj.paginator.num_pages %}
+                    <li><a class="pagination-link" aria-label="Goto page {{ page_obj.next_page_number }}"
+                           href="?page={{ page_obj.next_page_number }}">{{ page_obj.next_page_number }}</a></li>
+                    <li><span class="pagination-ellipsis">&hellip;</span></li>
+                {% endif %}
+                {% if page_obj.number != page_obj.paginator.num_pages %}
+                    <li><a class="pagination-link" aria-label="Goto page {{ page_obj.paginator.num_pages }}"
+                           href="?page={{ page_obj.paginator.num_pages }}">{{ page_obj.paginator.num_pages }}</a></li>
+                {% endif %}
+            </ul>
+        </nav>
+    </div>
+{% endblock %}

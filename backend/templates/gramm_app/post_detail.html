@@ -1,0 +1,21 @@
+{% extends '../base.html' %}
+{% load static %}
+{% block content %}
+     <div class="columns is-centered">
+        <div class="card column is-half">
+            <header class="card-header">
+                <h3 class="card-header-title is-size-2 has-text-grey-light">Post detail</h3>
+                <a class="delete" href="{% url 'index' %}"></a>
+            </header>
+            <div class="card-content">
+                {% include 'gramm_app/post_content.html' %}
+            </div>
+            {% if user.id == post.author.id %}
+        <footer class="card-footer">
+                <a class="card-footer-item button is-success" href="{% url 'post-update' pk=post.id %}">Edit post</a>
+                <a class="card-footer-item button is-danger" href="{% url 'post-delete' pk=post.id %}">Delete post</a>
+        </footer>
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}
