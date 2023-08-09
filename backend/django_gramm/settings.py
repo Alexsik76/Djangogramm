@@ -49,7 +49,6 @@ INSTALLED_APPS = [
     'auth_by_email',
     'gramm_app',
     'webpack_loader',
-
 ]
 
 MIDDLEWARE = [

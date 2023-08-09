@@ -12,8 +12,6 @@ from django.views.generic import UpdateView, DetailView
 from .forms import SignupForm, UserActivationForm, UserUpdateForm
 from .utils import create_email
 
-# Create your views here.
-
 
 class Signup(View):
     form_class = SignupForm
