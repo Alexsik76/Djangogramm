@@ -31,7 +31,7 @@ class Signup(View):
             message.send(fail_silently=False)
             return render(request, 'registration/signup_done.html')
         else:
-            return render(request, self.template_name, {'form': form})
+            return render(request, self.template_name, {'form': form, 'not_unique': True})
 
 
 DjGrammUser = get_user_model()

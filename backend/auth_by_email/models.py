@@ -81,6 +81,8 @@ class DjGrammUser(AbstractUser):
         self.username = self.email
         return self
 
+
+
     def delete_media(self):
         """For delete media when the user is deleted directly or in queryset"""
         cloudinary.api.delete_resources([self.avatar])
