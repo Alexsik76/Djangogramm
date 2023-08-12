@@ -31,6 +31,7 @@ class Signup(View):
             message.send(fail_silently=False)
             return render(request, 'registration/signup_done.html')
         else:
+            print('error')
             return render(request, self.template_name, {'form': form, 'not_unique': True})
 
 
@@ -70,6 +71,7 @@ class Activate(View):
             return redirect('index')
         else:
             return render(request, self.template_name, {'form': form})
+
 
 
 class DjUserDetailView(LoginRequiredMixin, DetailView):
