@@ -1,3 +1,5 @@
+version: '3.8'
+
 services:
   db:
     image: postgres:alpine
@@ -6,19 +8,17 @@ services:
       POSTGRES_USER: dj_gramm
       POSTGRES_PASSWORD: dj_pass
     volumes:
-      - ./data/db:/var/lib/postgresql/data
-    ports:
-      - "5432:5432"
+      - postgres_data:/var/lib/postgresql/data
   backend:
-    build:
-      context: ./backend
-      dockerfile: ./Dockerfile_dev
+    build: ./backend
     volumes:
-      - ./backend:/code
+      - ./backend/:/usr/src/app/
     env_file:
-      - ./backend/.env
+      - .env
     command: python manage.py runserver 0.0.0.0:8000
     ports:
       - "8000:8000"
     links:
       - db
+volumes:
+  postgres_data:
