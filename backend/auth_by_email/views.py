@@ -73,7 +73,6 @@ class Activate(View):
             return render(request, self.template_name, {'form': form})
 
 
-
 class DjUserDetailView(LoginRequiredMixin, DetailView):
     model = DjGrammUser
     context_object_name = 'dj_user'
