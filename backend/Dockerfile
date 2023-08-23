@@ -1,4 +1,4 @@
-FROM python:alpine
+FROM python
 LABEL authors="alex"
 LABEL desc="django dev container"
 WORKDIR /usr/src/app
@@ -10,5 +10,4 @@ RUN pip install -r requirements.txt
 COPY ./entrypoint.sh .
 RUN sed -i 's/\r$//g' ./entrypoint.sh
 RUN chmod +x ./entrypoint.sh
-COPY . .
 ENTRYPOINT ["./entrypoint.sh"]

@@ -32,6 +32,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.environ.get('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = bool(os.environ.get("DEBUG", default=0))
+# DEBUG = bool(0)
 ALLOWED_HOSTS = os.environ.get("DJANGO_ALLOWED_HOSTS").split(" ")
 
 # Application definition
@@ -48,7 +49,7 @@ INSTALLED_APPS = [
     'corsheaders',
     'auth_by_email',
     'gramm_app',
-    'webpack_loader',
+    # 'webpack_loader',
 ]
 
 MIDDLEWARE = [
@@ -178,14 +179,14 @@ CORS_ORIGIN_WHITELIST = (
     'http://localhost:8080',
 )
 
-WEBPACK_LOADER = {
-    'DEFAULT': {
-        'CACHE': not DEBUG,
-        'STATS_FILE': FRONTEND_DIR / 'webpack-stats.json',
-        'POLL_INTERVAL': 0.1,
-        'TIMEOUT': None,
-        'IGNORE': [r'.+\.hot-update.js', r'.+\.map']
-    }
-}
+# WEBPACK_LOADER = {
+#     'DEFAULT': {
+#         'CACHE': not DEBUG,
+#         'STATS_FILE': FRONTEND_DIR / 'webpack-stats.json',
+#         'POLL_INTERVAL': 0.1,
+#         'TIMEOUT': None,
+#         'IGNORE': [r'.+\.hot-update.js', r'.+\.map']
+#     }
+# }
 from auth_by_email.auth_settings import *
 
