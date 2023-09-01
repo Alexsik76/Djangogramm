@@ -23,16 +23,46 @@ class Signup(View):
 
     def post(self, request):
         form = self.form_class(request.POST)
+        domain = get_current_site(request).domain
         if form.is_valid():
-            user = form.save(commit=False)
-            user.make_inactive_user()
-            user.save()
-            message = create_email(user, get_current_site(request).domain)
+            message = self.make_first_registration_message(form, domain)
             message.send(fail_silently=False)
             return render(request, 'registration/signup_done.html')
         else:
-            print('error')
-            return render(request, self.template_name, {'form': form, 'not_unique': True})
+            email = form.data.get('email', None)
+            match self.get_email_status(email):
+                case 'not_registered':
+                    return render(request, self.template_name, {'form': form})
+                case 'activated':
+                    return redirect('login', permanent=True)
+                case 'not_activated':
+                    message = self.remake_registration_message(email, domain)
+                    message.send(fail_silently=False)
+                    return render(request, 'registration/resign_up_done.html')
+
+    @staticmethod
+    def get_email_status(email):
+        if DjGrammUser.objects.filter(email=email).exists():
+            user = DjGrammUser.objects.get(email=email)
+            return 'activated' if user.is_active else 'not_activated'
+        else:
+            return 'not_registered'
+
+    @staticmethod
+    def make_first_registration_message(form, domain):
+        user = form.save(commit=False)
+        user.make_inactive_user()
+        user.save()
+        message = create_email(user, domain)
+        return message
+
+    @staticmethod
+    def remake_registration_message(email, domain):
+        user = DjGrammUser.objects.get(email=email)
+        message = create_email(user, domain)
+        return message
+
+# TODO: Rewrite test for the SignUp View
 
 
 DjGrammUser = get_user_model()

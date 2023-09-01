@@ -1,4 +1,4 @@
-{% extends 'base.html' %}
+ {% extends 'base.html' %}
 {% block content %}
     {% load bulma_filters %}
     <div class="columns is-centered">
@@ -10,12 +10,7 @@
             <form method="post">
                 {% csrf_token %}
                 {% form_bulma %}
-                {% if not_unique %}
-                    <a class="button" href="{% url 'password_reset' %}">Resend email</a>
-                    <a class="button" href="{% url 'login' %}">Login</a>
-                {% else %}
                 {% button_bulma name='signup' %}
-                {% endif %}
             </form>
         </div>
     </div>
