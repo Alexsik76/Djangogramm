@@ -5,6 +5,7 @@ from django.urls import reverse
 from django.core.exceptions import ValidationError
 from auth_by_email.models import DjGrammUser
 from auth_by_email.forms import SignupForm
+from auth_by_email.views import Signup
 import random
 import cloudinary
 from cloudinary import CloudinaryResource
@@ -21,6 +22,7 @@ class SignupViewTest(TestCase):
         self.form = SignupForm(data={'email': 'example@email.com'})
         self.user = self.form.save(commit=False)
         self.user.make_inactive_user()
+        self.user.save()
         self.from_email = \
             django.conf.settings.DEFAULT_FROM_EMAIL or 'test@email'
 
@@ -42,7 +44,36 @@ class SignupViewTest(TestCase):
     def test_signup_post(self):
         response = self.client.post(reverse('signup'),
                                     data={'email': 'example@email.com'})
+        self.assertContains(response,
+                            'Dj gramm user with this Email address already exists, but registration is not complete.')
         self.assertEqual(response.status_code, 200)
+        response = self.client.post(reverse('signup'),
+                                    data={'email': 'example_first@email.com'})
+        self.assertContains(response,
+                            'We’ve emailed you instructions for the continue registration, if an account exists with '
+                            'the email you entered. You should receive them shortly.')
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(Signup.get_email_status('wrong@email.com'), 'not_registered')
+        response = self.client.post(reverse('signup'),
+                                    data={'email': 'not_email.com'})
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.context['form'].is_valid(), False)
+        self.assertIn('Enter a valid email address.', response.context['form']['email'].errors)
+
+        self.user.is_active = True
+        self.user.save()
+        self.assertEqual(self.user.is_active, True)
+        response = self.client.post(reverse('signup'),
+                                    data={'email': 'example@email.com'})
+        self.assertEqual(response.status_code, 301)
+
+    def test_get_email_status(self):
+        self.assertEqual(Signup.get_email_status('wrong@email.com'), 'not_registered')
+        self.assertEqual(Signup.get_email_status('example@email.com'), 'not_activated')
+        self.assertEqual(self.user.is_active, False)
+        self.user.is_active = True
+        self.user.save()
+        self.assertEqual(Signup.get_email_status('example@email.com'), 'activated')
 
     def test_login(self):
         response = self.client.get(reverse('login'))

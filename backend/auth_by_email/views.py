@@ -62,8 +62,6 @@ class Signup(View):
         message = create_email(user, domain)
         return message
 
-# TODO: Rewrite test for the SignUp View
-
 
 DjGrammUser = get_user_model()
 
@@ -94,7 +92,7 @@ class Activate(View):
                                request.FILES,
                                instance=request.user)
         if form.is_valid():
-            user = form.save()
+            user = form.save(commit=False)
             user.grant_user_permissions()
             user.save()
             update_session_auth_hash(request, user)
