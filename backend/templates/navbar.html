@@ -17,6 +17,9 @@
             <a class="navbar-item" href="{% url 'post-create' %}">Create post</a>
             <a class="navbar-item" href="{% url 'post-list' %}">All posts</a>
         </div>
+{#    <div class="navbar-center">#}
+{#        {% now 'r' %}#}
+{#    </div>#}
         <div class="navbar-end">
             {% if user.is_authenticated %}
                 <div class="navbar-item">

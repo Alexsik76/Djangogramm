@@ -1,15 +1,10 @@
 -i https://pypi.org/simple
-asgiref
-certifi
-cloudinary
-coverage
-dj-database-url
 django
-gunicorn
-multiavatar
-pillow
 psycopg2-binary
-six
-tzdata
+dj-database-url
 django-webpack-loader
 django-cors-headers
+cloudinary
+social-auth-app-django
+django-extensions
+django-debug-toolbar

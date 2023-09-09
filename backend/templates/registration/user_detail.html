@@ -20,8 +20,8 @@
                                 {% endif %}
                             </figure>
                             <follow-button
-                                    target_user_id="{{ dj_user.id }}"
-                                    followers_count="{{ dj_user.followers.count }}"
+                                    :target_user_id="{{ dj_user.id }}"
+                                    :followers_count="{{ dj_user.followers.count }}"
                                     :is_followed="{{ dj_user|is_followed:user }}"
                             >
                             </follow-button>

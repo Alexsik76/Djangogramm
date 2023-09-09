@@ -13,6 +13,7 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 import os
 from pathlib import Path
 import django
+import dj_database_url
 import cloudinary
 import cloudinary.uploader
 import cloudinary.api
@@ -20,8 +21,6 @@ import cloudinary.api
 # env = environ.Env()
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
-
-# environ.Env.read_env(BASE_DIR / '.env')
 
 
 # Quick-start development settings - unsuitable for production
@@ -32,8 +31,11 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.environ.get('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = bool(os.environ.get("DEBUG", default=0))
-# DEBUG = bool(0)
 ALLOWED_HOSTS = os.environ.get("DJANGO_ALLOWED_HOSTS").split(" ")
+if DEBUG:
+    import socket  # only if you haven't already imported this
+    hostname, _, ips = socket.gethostbyname_ex(socket.gethostname())
+    INTERNAL_IPS = [ip[: ip.rfind(".")] + ".1" for ip in ips] + ["127.0.0.1", "10.0.2.2"]
 
 # Application definition
 
@@ -49,6 +51,8 @@ INSTALLED_APPS = [
     'corsheaders',
     'auth_by_email',
     'gramm_app',
+    'django_extensions',
+    'debug_toolbar',
     # 'webpack_loader',
 ]
 
@@ -62,6 +66,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
+    'debug_toolbar.middleware.DebugToolbarMiddleware',
 ]
 
 ROOT_URLCONF = 'django_gramm.urls'
@@ -96,18 +101,11 @@ TEMPLATES = [
 WSGI_APPLICATION = 'django_gramm.wsgi.application'
 
 
-# Database
-# https://docs.djangoproject.com/en/3.2/ref/settings/#databases
-
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': os.environ.get('POSTGRES_NAME'),
-        "HOST": os.environ.get("SQL_HOST", "localhost"),
-        "PORT": os.environ.get("SQL_PORT", "5432"),
-        'USER': os.environ.get('POSTGRES_USER'),
-        'PASSWORD': os.environ.get('POSTGRES_PASSWORD')
-    }
+    'default': dj_database_url.config(
+        conn_max_age=600,
+        conn_health_checks=True,
+    ),
 }
 
 
@@ -164,7 +162,6 @@ MEDIA_URL = ""
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-
 EMAIL_HOST = os.environ.get('EMAIL_HOST')
 EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD')
 EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER')
@@ -175,9 +172,9 @@ DEFAULT_FROM_EMAIL = os.environ.get('DEFAULT_FROM_EMAIL')
 
 CLOUDINARY_URL = os.environ.get('CLOUDINARY_URL')
 
-CORS_ORIGIN_WHITELIST = (
-    'http://localhost:8080',
-)
+# CORS_ORIGIN_WHITELIST = (
+#     'http://localhost:8080',
+# )
 
 # WEBPACK_LOADER = {
 #     'DEFAULT': {
@@ -188,5 +185,4 @@ CORS_ORIGIN_WHITELIST = (
 #         'IGNORE': [r'.+\.hot-update.js', r'.+\.map']
 #     }
 # }
-from auth_by_email.auth_settings import *
-
+from auth_by_email.auth_settings import * # noqa
