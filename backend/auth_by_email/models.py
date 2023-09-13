@@ -6,6 +6,7 @@ from django.utils.translation import gettext_lazy as _
 from cloudinary.models import CloudinaryField
 import cloudinary.api
 
+
 # Create your models here.
 
 
@@ -40,6 +41,16 @@ class DjGrammUserManager(BaseUserManager):
         user.save()
         return user
 
+    def create_user(self, **fields):
+        """
+        Creates user on stage signup  with social-auth module.
+        """
+        if fields.get('email', None):
+            password = 'password'
+            email = fields['email']
+            user = self._create_user(email, password)
+            return user
+
     def create_superuser(self, email, password, **extra_fields):
         """Creates superuser"""
         extra_fields.setdefault('is_staff', True)
@@ -51,6 +62,10 @@ class DjGrammUserManager(BaseUserManager):
         if extra_fields.get('is_superuser') is not True:
             raise ValueError('Superuser must have is_superuser=True.')
         return self._create_user(email, password, **extra_fields)
+
+    @classmethod
+    def user_model(cls):
+        return DjGrammUser
 
 
 class DjGrammUser(AbstractUser):

@@ -24,6 +24,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('gramm_app/', include('gramm_app.urls')),
     path('auth_by_email/', include('auth_by_email.urls')),
+    path('social-auth/', include('social_django.urls', namespace='social')),
     path('', RedirectView.as_view(url='gramm_app/')),
 ]
 if settings.DEBUG:

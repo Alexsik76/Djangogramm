@@ -53,6 +53,7 @@ INSTALLED_APPS = [
     'gramm_app',
     'django_extensions',
     'debug_toolbar',
+    'social_django',
     # 'webpack_loader',
 ]
 
@@ -67,6 +68,7 @@ MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     'debug_toolbar.middleware.DebugToolbarMiddleware',
+    'social_django.middleware.SocialAuthExceptionMiddleware',
 ]
 
 ROOT_URLCONF = 'django_gramm.urls'
@@ -90,6 +92,8 @@ TEMPLATES = [
                 'django.template.context_processors.static',
                 'django.template.context_processors.media',
                 'django.template.context_processors.tz',
+                'social_django.context_processors.backends',
+                'social_django.context_processors.login_redirect',
             ],
             'libraries': {
                 'templatetags': 'auth_by_email.templatetags.bulma_filters'
@@ -108,10 +112,9 @@ DATABASES = {
     ),
 }
 
+SOCIAL_AUTH_JSONFIELD_ENABLED = True
 
 AUTH_USER_MODEL = 'auth_by_email.DjGrammUser'
-LOGIN_REDIRECT_URL = 'index'
-LOGIN_URL = 'login'
 
 # Password validation
 # https://docs.djangoproject.com/en/3.2/ref/settings/#auth-password-validators
@@ -185,4 +188,16 @@ CLOUDINARY_URL = os.environ.get('CLOUDINARY_URL')
 #         'IGNORE': [r'.+\.hot-update.js', r'.+\.map']
 #     }
 # }
+AUTHENTICATION_BACKENDS = (
+    'social_core.backends.github.GithubOAuth2',
+    'django.contrib.auth.backends.ModelBackend'
+)
+SOCIAL_AUTH_GITHUB_KEY = '4b0ceb2aab709dbbf006'
+SOCIAL_AUTH_GITHUB_SECRET = 'f9c415acb8eec65feeb439f556730f2f7a3ba6b1'
+LOGIN_REDIRECT_URL = 'index'
+LOGIN_URL = 'login'
+LOGOUT_URL = 'logout'
+LOGOUT_REDIRECT_URL = 'login'
+
+
 from auth_by_email.auth_settings import * # noqa
